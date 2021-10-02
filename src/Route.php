@@ -72,47 +72,33 @@ class Route
         }
     }
 
-    /**
-     * @return string
-     */
-    public function getUri(): string
+    public function __get($key)
     {
-        return $this->uri;
+        return $this->$key ?? null;
     }
 
-    /**
-     * @return array
-     */
-    public function getMethods(): array
+    public function __set($key, $value)
     {
-        return $this->methods;
+        $this->$key = $value;
     }
 
-    /**
-     * @return callable
-     */
-    public function getDestination()
-    {
-        if (is_string($this->destination)) {
-            if ('C:' === substr($this->destination, 0, 2)) {
-                return \Opis\Closure\unserialize($this->destination);
-            }
-            $destination = explode('@', $this->destination, 2);
-            if (2 !== count($destination)) {
-                throw new \InvalidArgumentException('路由参数不正确!');
-            }
-            return $destination;
-        }
-        return $this->destination;
-    }
-
-    /**
-     * @return array
-     */
-    public function getMiddleware(): array
-    {
-        return $this->middleware;
-    }
+//    /**
+//     * @return callable
+//     */
+//    public function getDestination()
+//    {
+//        if (is_string($this->destination)) {
+//            if ('C:' === substr($this->destination, 0, 2)) {
+//                return \Opis\Closure\unserialize($this->destination);
+//            }
+//            $destination = explode('@', $this->destination, 2);
+//            if (2 !== count($destination)) {
+//                throw new \InvalidArgumentException('路由参数不正确!');
+//            }
+//            return $destination;
+//        }
+//        return $this->destination;
+//    }
 
     /**
      * 排除某个中间件
@@ -127,58 +113,6 @@ class Route
             unset($this->middleware[$key]);
         }
         return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getExt(): string
-    {
-        return $this->ext;
-    }
-
-    /**
-     * @return false|int
-     */
-    public function getCache()
-    {
-        return $this->cache;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getAlias(): ?string
-    {
-        return $this->alias;
-    }
-
-    /**
-     * @return array|string|null
-     */
-    public function getAllowCrossDomain()
-    {
-        return $this->allowCrossDomain;
-    }
-
-    /**
-     * @return array
-     */
-    public function getRouteParams(): array
-    {
-        return $this->routeParams;
-    }
-
-    /**
-     * 路由参数
-     *
-     * @param $params
-     *
-     * @return $this
-     */
-    public function routeParams($params)
-    {
-        return $this->set(__FUNCTION__, $params, true);
     }
 
     /**

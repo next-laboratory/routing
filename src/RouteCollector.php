@@ -31,8 +31,8 @@ class RouteCollector
     public function add(Route $route)
     {
         $this->routes[] = $route;
-        foreach ($route->getMethods() as $method) {
-            $this->grouped[$method][$route->getUri()] = $route;
+        foreach ($route->methods as $method) {
+            $this->grouped[$method][$route->uri] = $route;
         }
         return $this;
     }
@@ -78,16 +78,39 @@ class RouteCollector
         $requestUri = $request->getUri()->getPath();
         foreach ($this->grouped[$request->getMethod()] as $route) {
             /* @var Route $route */
-            $uri = $route->getUri();
+            $uri = $route->uri;
             if ($uri === $requestUri || preg_match('#^' . $uri . '$#iU', $requestUri, $match)) {
                 if (isset($match)) {
                     array_shift($match);
-                    $route->routeParams($match);
+                    $route->routeParams = $match;
                 }
+                $route->destination = $this->parseDestination($route->destination);
                 return $route;
             }
         }
         throw new RouteNotFoundException('Page not found.', 404);
+    }
+
+    /**
+     * 将字符串地址解析为callable
+     *
+     * @param $destination
+     *
+     * @return false|mixed|string[]
+     */
+    protected function parseDestination($destination)
+    {
+        if (is_string($destination)) {
+            if ('C:' === substr($destination, 0, 2)) {
+                return \Opis\Closure\unserialize($destination);
+            }
+            $destination = explode('@', $destination, 2);
+            if (2 !== count($destination)) {
+                throw new \InvalidArgumentException('路由参数不正确!');
+            }
+            return $destination;
+        }
+        return $destination;
     }
 
 }
