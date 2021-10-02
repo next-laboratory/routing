@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Max\Routing\Exceptions;
 
-class RouteNotFoundException
+use Exception;
+
+class RouteNotFoundException extends Exception
 {
 }
