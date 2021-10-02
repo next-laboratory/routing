@@ -6,6 +6,7 @@ namespace Max\Routing;
 use Max\Routing\Exceptions\RouteNotFoundException;
 use Max\Routing\{Route, RouteCollector};
 use Psr\Http\Message\ServerRequestInterface;
+use Max\App;
 
 /**
  * 路由操作类
