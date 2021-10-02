@@ -87,7 +87,7 @@ class RouteCollector
                 return $route;
             }
         }
-        throw new RouteNotFoundException();
+        throw new RouteNotFoundException('Page not found.', 404);
     }
 
 }

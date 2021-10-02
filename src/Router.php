@@ -3,10 +3,10 @@ declare (strict_types=1);
 
 namespace Max\Routing;
 
-use Max\Routing\Exceptions\RouteNotFoundException;
-use Max\Routing\{Route, RouteCollector};
-use Psr\Http\Message\ServerRequestInterface;
 use Max\App;
+use Max\Routing\{Route, RouteCollector};
+use Max\Routing\Exceptions\RouteNotFoundException;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * 路由操作类
