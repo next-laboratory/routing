@@ -1,0 +1,22 @@
+{
+  "name": "max/routing",
+  "description": "一个简单易用的路由",
+  "authors": [
+    {
+      "name": "chengyao",
+      "email": "bigyao@139.com"
+    }
+  ],
+  "type": "library",
+  "license": "Apache-2.0",
+  "homepage": "https://www.chengyao.xyz",
+  "require": {
+    "php": "^7.4|^8.0",
+    "opis/closure": "^3.6"
+  },
+  "autoload": {
+    "psr-4": {
+      "Max\\Routing\\": "src/"
+    }
+  }
+}
