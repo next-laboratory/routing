@@ -4,7 +4,6 @@ declare (strict_types=1);
 namespace Max\Routing;
 
 use Max\App;
-use Max\Routing\{Route, RouteCollector};
 use Max\Routing\Exceptions\RouteNotFoundException;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -51,15 +50,13 @@ class Router
     }
 
     /**
-     * 设置所有路由
-     *
-     * @param array $routes
+     * @param Route ...$routes
      *
      * @return $this
      */
-    public function make(array $routes)
+    public function make(Route ...$routes)
     {
-        $this->routes = $routes;
+        $this->routeCollector->make($routes);
         return $this;
     }
 
@@ -200,5 +197,4 @@ class Router
     {
         return $this->routeCollector->resolve($request);
     }
-
 }

@@ -82,24 +82,6 @@ class Route
         $this->$key = $value;
     }
 
-//    /**
-//     * @return callable
-//     */
-//    public function getDestination()
-//    {
-//        if (is_string($this->destination)) {
-//            if ('C:' === substr($this->destination, 0, 2)) {
-//                return \Opis\Closure\unserialize($this->destination);
-//            }
-//            $destination = explode('@', $this->destination, 2);
-//            if (2 !== count($destination)) {
-//                throw new \InvalidArgumentException('路由参数不正确!');
-//            }
-//            return $destination;
-//        }
-//        return $this->destination;
-//    }
-
     /**
      * 排除某个中间件
      *
