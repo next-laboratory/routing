@@ -38,11 +38,11 @@ class Router
     protected RouteCollector $routeCollector;
 
     /**
-     * @param string $prefix
-     * @param array  $middlewares
-     * @param null   $routeCollector
+     * @param string          $prefix
+     * @param array           $middlewares
+     * @param ?RouteCollector $routeCollector
      */
-    public function __construct(string $prefix = '', $middlewares = [], $routeCollector = null)
+    public function __construct(?RouteCollector $routeCollector = null, string $prefix = '', $middlewares = [])
     {
         $this->prefix         = $prefix;
         $this->middlewares    = (array)$middlewares;
@@ -170,7 +170,7 @@ class Router
      */
     public function middleware($middleware)
     {
-        return new static($this->prefix, [...$this->middlewares, ...(array)$middleware], $this->routeCollector);
+        return new static($this->routeCollector, $this->prefix, [...$this->middlewares, ...(array)$middleware]);
     }
 
     /**
@@ -182,7 +182,7 @@ class Router
      */
     public function prefix(string $prefix)
     {
-        return new static($this->prefix . $prefix, $this->middlewares, $this->routeCollector);
+        return new static($this->routeCollector, $this->prefix . $prefix, $this->middlewares);
     }
 
     /**
