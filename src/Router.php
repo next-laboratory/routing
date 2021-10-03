@@ -114,10 +114,11 @@ class Router
     public function rule(string $uri, $destination, $methods = ['GET', 'HEAD', 'POST'])
     {
         $route = new Route([
-            'uri'         => '/' . trim($this->prefix . $uri, '/'),
-            'destination' => $destination,
-            'methods'     => $methods,
-            'middleware'  => $this->middlewares
+            'uri'            => '/' . trim($this->prefix . $uri, '/'),
+            'destination'    => $destination,
+            'methods'        => $methods,
+            'middleware'     => $this->middlewares,
+            'routeCollector' => $this->routeCollector,
         ]);
         $this->routeCollector->add($route);
         return $route;

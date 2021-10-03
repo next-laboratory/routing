@@ -31,7 +31,7 @@ class Url
     public function set(string $alias, string $uri)
     {
         // TODO 重复alias
-        $this->alias[$uri] = $alias;
+        $this->alias[$alias] = $uri;
     }
 
     /**

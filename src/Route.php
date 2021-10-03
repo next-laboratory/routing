@@ -57,6 +57,8 @@ class Route
      */
     protected array $routeParams = [];
 
+    protected RouteCollector $routeCollector;
+
     /**
      * 初始化数据
      * Route constructor.
@@ -154,6 +156,7 @@ class Route
      */
     public function alias(string $alias)
     {
+        $this->routeCollector->getUrl()->set($alias, $this->uri);
         return $this->set(__FUNCTION__, $alias);
     }
 

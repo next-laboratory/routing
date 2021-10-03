@@ -32,6 +32,14 @@ class RouteCollector
     }
 
     /**
+     * @return Url
+     */
+    public function getUrl()
+    {
+        return $this->url;
+    }
+
+    /**
      * 添加一个路由
      *
      * @param Route $route
@@ -41,9 +49,6 @@ class RouteCollector
     public function add(Route $route): RouteCollector
     {
         $this->routes[] = $route;
-        if (isset($route->alias)) {
-            $this->url->set($route->alias, $route->uri);
-        }
         foreach ($route->methods as $method) {
             $this->grouped[$method][$route->uri] = $route;
         }
