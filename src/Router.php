@@ -42,32 +42,11 @@ class Router
      * @param array           $middlewares
      * @param ?RouteCollector $routeCollector
      */
-    public function __construct(?RouteCollector $routeCollector = null, string $prefix = '', $middlewares = [])
+    public function __construct(RouteCollector $routeCollector, string $prefix = '', $middlewares = [])
     {
         $this->prefix         = $prefix;
         $this->middlewares    = (array)$middlewares;
-        $this->routeCollector = $routeCollector ?? new RouteCollector();
-    }
-
-    /**
-     * @param Route ...$routes
-     *
-     * @return $this
-     */
-    public function make(Route ...$routes)
-    {
-        $this->routeCollector->make($routes);
-        return $this;
-    }
-
-    /**
-     * 取出所有路由
-     *
-     * @return array
-     */
-    public function getAll(): array
-    {
-        return $this->routeCollector->all();
+        $this->routeCollector = $routeCollector;
     }
 
     /**
@@ -162,7 +141,7 @@ class Router
     }
 
     /**
-     * 设置中间件[通常是分组]
+     * 设置中间件
      *
      * @param $middleware
      *
@@ -174,7 +153,7 @@ class Router
     }
 
     /**
-     * 设置前缀[通常是分组]
+     * 设置前缀
      *
      * @param string $prefix
      *
@@ -185,16 +164,4 @@ class Router
         return new static($this->routeCollector, $this->prefix . $prefix, $this->middlewares);
     }
 
-    /**
-     * 匹配
-     *
-     * @param ServerRequestInterface $request
-     *
-     * @return Route
-     * @throws RouteNotFoundException
-     */
-    public function resolve(ServerRequestInterface $request)
-    {
-        return $this->routeCollector->resolve($request);
-    }
 }
