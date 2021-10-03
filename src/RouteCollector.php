@@ -19,7 +19,17 @@ class RouteCollector
      *
      * @var array
      */
-    protected $grouped = [];
+    protected array $grouped = [];
+
+    /**
+     * @var Url
+     */
+    protected Url $url;
+
+    public function __construct()
+    {
+        $this->url = new Url();
+    }
 
     /**
      * 添加一个路由
@@ -28,9 +38,12 @@ class RouteCollector
      *
      * @return $this
      */
-    public function add(Route $route)
+    public function add(Route $route): RouteCollector
     {
         $this->routes[] = $route;
+        if (isset($route->alias)) {
+            $this->url->set($route->alias, $route->uri);
+        }
         foreach ($route->methods as $method) {
             $this->grouped[$method][$route->uri] = $route;
         }
@@ -55,12 +68,17 @@ class RouteCollector
      *
      * @return array
      */
-    public function all()
+    public function all(): array
     {
         return $this->routes;
     }
 
-    public function getGrouped()
+    /**
+     * 全部分组的路由
+     *
+     * @return array
+     */
+    public function getGrouped(): array
     {
         return $this->grouped;
     }
@@ -73,7 +91,7 @@ class RouteCollector
      * @return Route
      * @throws RouteNotFoundException
      */
-    public function resolve(ServerRequestInterface $request)
+    public function resolve(ServerRequestInterface $request): Route
     {
         $requestUri = $request->getUri()->getPath();
         foreach ($this->grouped[$request->getMethod()] as $route) {
@@ -111,6 +129,20 @@ class RouteCollector
             return $destination;
         }
         return $destination;
+    }
+
+    /**
+     * 使用别名生成url
+     *
+     * @param string $alias
+     * @param array  $args
+     *
+     * @return mixed|string
+     * @throws \Exception
+     */
+    public function buildUrl(string $alias, array $args = [])
+    {
+        return $this->url->build($alias, $args);
     }
 
 }

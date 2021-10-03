@@ -10,7 +10,8 @@ class Url
      *
      * @var array
      */
-    protected $alias = [];
+    protected array $alias = [];
+
 
     /**
      * 使用url获取路由别名
@@ -27,6 +28,12 @@ class Url
         return null;
     }
 
+    public function set(string $alias, string $uri)
+    {
+        // TODO 重复alias
+        $this->alias[$uri] = $alias;
+    }
+
     /**
      * 获取路由别名
      *
@@ -34,15 +41,15 @@ class Url
      * @param array  $args
      *
      * @return mixed|string
-     * @throws Exception
+     * @throws \Exception
      */
-    public function getAlias(string $alias, array $args = [])
+    public function build(string $alias, array $args = [])
     {
         if (isset($this->alias[$alias])) {
             if (preg_match('/\(.+\)/i', $this->alias[$alias])) {
                 $rep = explode(',', preg_replace(['#\\\#', '#\(.+\)#Ui'], ['', ','], $this->alias[$alias]));
                 if (($argNums = count($rep) - 1) != count($args)) {
-                    throw new Exception("别名:{$alias}需要传入{$argNums}个参数！");
+                    throw new \Exception("别名:{$alias}需要传入{$argNums}个参数！");
                 }
                 $match = '';
                 $args  = array_values($args);
