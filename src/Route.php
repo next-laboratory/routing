@@ -5,21 +5,29 @@ namespace Max\Routing;
 class Route
 {
     /**
+     * 请求URI
+     *
      * @var string
      */
     protected string $uri;
 
     /**
+     * 请求方法
+     *
      * @var array
      */
     protected array $methods;
 
     /**
+     * 目标
+     *
      * @var \Closure|array|string
      */
     protected $destination;
 
     /**
+     * 中间件
+     *
      * @var array
      */
     protected array $middleware = [];
@@ -32,21 +40,23 @@ class Route
     protected string $ext = '';
 
     /**
+     * 是否缓存
+     *
      * @var false|int
      */
-    protected bool $cache = false;
+    protected $cache = false;
 
     /**
      * 别名
      *
-     * @var string|null
+     * @var ?string
      */
     protected ?string $alias = null;
 
     /**
      * 跨域允许
      *
-     * @var null
+     * @var ?array
      */
     protected ?array $allowCrossDomain = null;
 
@@ -57,6 +67,11 @@ class Route
      */
     protected array $routeParams = [];
 
+    /**
+     * 路由集合
+     *
+     * @var RouteCollector
+     */
     protected RouteCollector $routeCollector;
 
     /**
@@ -72,16 +87,6 @@ class Route
                 $this->$key = $value;
             }
         }
-    }
-
-    public function __get($key)
-    {
-        return $this->$key ?? null;
-    }
-
-    public function __set($key, $value)
-    {
-        $this->$key = $value;
     }
 
     /**
@@ -108,7 +113,8 @@ class Route
      */
     public function ext(string $ext)
     {
-        return $this->set(__FUNCTION__, $ext);
+        $this->uri .= $ext;
+        return $this->call(__FUNCTION__, $ext);
     }
 
     /**
@@ -120,7 +126,7 @@ class Route
      */
     public function middleware($middleware)
     {
-        return $this->set(__FUNCTION__, array_unique([...$this->middleware, ...(array)$middleware]), true);
+        return $this->call(__FUNCTION__, array_unique([...$this->middleware, ...(array)$middleware]), true);
     }
 
     /**
@@ -132,7 +138,7 @@ class Route
      */
     public function cache(int $expire)
     {
-        return $this->set(__FUNCTION__, $expire);
+        return $this->call(__FUNCTION__, $expire);
     }
 
     /**
@@ -144,7 +150,7 @@ class Route
      */
     public function allowCrossDomain($allowDomain)
     {
-        return $this->set(__FUNCTION__, $allowDomain, true);
+        return $this->call(__FUNCTION__, $allowDomain, true);
     }
 
     /**
@@ -157,13 +163,23 @@ class Route
     public function alias(string $alias)
     {
         $this->routeCollector->getUrl()->set($alias, $this->uri);
-        return $this->set(__FUNCTION__, $alias);
+        return $this->call(__FUNCTION__, $alias);
     }
 
-    protected function set(string $key, $value, bool $arrayFlag = false)
+    protected function call(string $key, $value, bool $arrayFlag = false)
     {
         $this->$key = $arrayFlag ? (array)$value : $value;
         return $this;
+    }
+
+    public function __get($key)
+    {
+        return $this->$key ?? null;
+    }
+
+    public function __set($key, $value)
+    {
+        $this->$key = $value;
     }
 
 }
