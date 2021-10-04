@@ -15,13 +15,6 @@ class RouteCollector
     protected array $routes = [];
 
     /**
-     * 按照请求方式分组的路由
-     *
-     * @var array
-     */
-    protected array $grouped = [];
-
-    /**
      * @var Url
      */
     protected Url $url;
@@ -48,9 +41,8 @@ class RouteCollector
      */
     public function add(Route $route): RouteCollector
     {
-        $this->routes[] = $route;
         foreach ($route->methods as $method) {
-            $this->grouped[$method][$route->uri] = $route;
+            $this->routes[$method][] = $route;
         }
         return $this;
     }
@@ -79,16 +71,6 @@ class RouteCollector
     }
 
     /**
-     * 全部分组的路由
-     *
-     * @return array
-     */
-    public function getGrouped(): array
-    {
-        return $this->grouped;
-    }
-
-    /**
      * 匹配
      *
      * @param ServerRequestInterface $request
@@ -99,7 +81,7 @@ class RouteCollector
     public function resolve(ServerRequestInterface $request): Route
     {
         $requestUri = $request->getUri()->getPath();
-        foreach ($this->grouped[$request->getMethod()] as $route) {
+        foreach ($this->routes[$request->getMethod()] as $route) {
             /* @var Route $route */
             $uri = $route->uri;
             if ($uri === $requestUri || preg_match('#^' . $uri . '$#iU', $requestUri, $match)) {
