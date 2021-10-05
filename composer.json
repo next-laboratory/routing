@@ -18,5 +18,12 @@
     "psr-4": {
       "Max\\Routing\\": "src/"
     }
+  },
+  "extra": {
+    "max": {
+      "config": {
+        "route": "publish/route.php"
+      }
+    }
   }
 }
