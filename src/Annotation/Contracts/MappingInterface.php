@@ -4,7 +4,13 @@ namespace Max\Routing\Annotation\Contracts;
 
 interface MappingInterface
 {
-    public function set($controller, $method);
+    /**
+     * @param string $controller 请求的控制器
+     * @param string $method     请求的方法
+     *
+     * @return mixed
+     */
+    public function set(string $controller, string $method);
 
     public function register();
 }

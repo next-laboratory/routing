@@ -9,19 +9,19 @@ use Max\Routing\Annotation\Contracts\MappingInterface;
 #[\Attribute(\Attribute::TARGET_METHOD)]
 class RuleMapping extends Annotation implements MappingInterface
 {
-    protected $path;
+    protected string $path;
 
-    protected $controller;
+    protected string $controller;
 
-    protected $method;
+    protected string $method;
 
     protected ?string $alias = null;
 
     protected ?array $allowCrossDomain = null;
 
-    protected $methods = ['GET', 'HEAD', 'POST'];
+    protected array $methods = ['GET', 'HEAD', 'POST'];
 
-    public function set($controller, $method)
+    public function set(string $controller, string $method)
     {
         $this->controller = $controller;
         $this->method     = $method;
