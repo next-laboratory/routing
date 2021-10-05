@@ -22,7 +22,7 @@
   "extra": {
     "max": {
       "config": {
-        "route": "publish/route.php"
+        "routing": "publish/route.php"
       }
     }
   }
