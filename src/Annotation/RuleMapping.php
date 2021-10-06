@@ -2,7 +2,7 @@
 
 namespace Max\Routing\Annotation;
 
-use Max\Di\Annotation;
+use Max\Di\Annotation\Annotation;
 use Max\Facade\Route;
 use Max\Routing\Annotation\Contracts\MappingInterface;
 
