@@ -110,9 +110,6 @@ class RouteCollector
     protected function parseDestination($destination)
     {
         if (is_string($destination)) {
-            if ('C:' === substr($destination, 0, 2)) {
-                return \Opis\Closure\unserialize($destination);
-            }
             $destination = explode('@', $destination, 2);
             if (2 !== count($destination)) {
                 throw new \InvalidArgumentException('路由参数不正确!');
