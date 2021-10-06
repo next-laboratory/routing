@@ -83,7 +83,7 @@ class RouteCollector
         $requestUri    = $request->getUri()->getPath();
         $requestMethod = $request->getMethod();
         if (!isset($this->routes[$requestMethod])) {
-            throw new RouteNotFoundException('Unsupported request method: ' . $requestMethod);
+            throw new RouteNotFoundException('Method Not Allowed : ' . $requestMethod, 405);
         }
         foreach ($this->routes[$requestMethod] as $route) {
             /* @var Route $route */
@@ -97,7 +97,7 @@ class RouteCollector
                 return $route;
             }
         }
-        throw new RouteNotFoundException('Page not found.', 404);
+        throw new RouteNotFoundException('Not Found', 404);
     }
 
     /**
