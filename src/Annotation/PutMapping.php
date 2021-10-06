@@ -5,5 +5,5 @@ namespace Max\Routing\Annotation;
 #[\Attribute(\Attribute::TARGET_METHOD)]
 class PutMapping extends RuleMapping
 {
-    protected array $method = ['PUT'];
+    protected array $methods = ['PUT'];
 }

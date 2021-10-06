@@ -2,10 +2,8 @@
 
 namespace Max\Routing\Annotation;
 
-use Max\Di\Annotation\Annotation;
-
 #[\Attribute(\Attribute::TARGET_METHOD)]
-class PatchMapping extends Annotation
+class PatchMapping extends RuleMapping
 {
     protected array $methods = ['PATCH'];
 }
