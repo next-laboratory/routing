@@ -80,8 +80,12 @@ class RouteCollector
      */
     public function resolve(ServerRequestInterface $request): Route
     {
-        $requestUri = $request->getUri()->getPath();
-        foreach ($this->routes[$request->getMethod()] as $route) {
+        $requestUri    = $request->getUri()->getPath();
+        $requestMethod = $request->getMethod();
+        if (!isset($this->routes[$requestMethod])) {
+            throw new RouteNotFoundException('Unsupported request method: ' . $requestMethod);
+        }
+        foreach ($this->routes[$requestMethod] as $route) {
             /* @var Route $route */
             $uri = $route->uri;
             if ($uri === $requestUri || preg_match('#^' . $uri . '$#iU', $requestUri, $match)) {
