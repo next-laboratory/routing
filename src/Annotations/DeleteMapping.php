@@ -1,6 +1,6 @@
 <?php
 
-namespace Max\Routing\Annotation;
+namespace Max\Routing\Annotations;
 
 #[\Attribute(\Attribute::TARGET_METHOD)]
 class DeleteMapping extends RuleMapping

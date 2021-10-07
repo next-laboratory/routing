@@ -1,9 +1,9 @@
 <?php
 
-namespace Max\Routing\Annotation;
+namespace Max\Routing\Annotations;
 
 use Max\App;
-use Max\Di\Annotation\Annotation;
+use Max\Di\Annotations\Annotation;
 use Max\Routing\RouteCollector;
 use Max\Routing\Router;
 

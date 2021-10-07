@@ -1,10 +1,10 @@
 <?php
 
-namespace Max\Routing\Annotation;
+namespace Max\Routing\Annotations;
 
-use Max\Di\Annotation\Annotation;
+use Max\Di\Annotations\Annotation;
 use Max\Facade\Route;
-use Max\Routing\Annotation\Contracts\MappingInterface;
+use Max\Routing\Contracts\MappingInterface;
 
 #[\Attribute(\Attribute::TARGET_METHOD)]
 class RuleMapping extends Annotation implements MappingInterface

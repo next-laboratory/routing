@@ -1,6 +1,6 @@
 <?php
 
-namespace Max\Routing\Annotation\Contracts;
+namespace Max\Routing\Contracts;
 
 interface MappingInterface
 {
