@@ -150,6 +150,8 @@ class Route
      */
     public function allowCrossDomain($allowDomain)
     {
+        $this->methods[] = 'OPTIONS';
+        $this->routeCollector->addWithMethod('OPTIONS', $this);
         return $this->call(__FUNCTION__, $allowDomain, true);
     }
 

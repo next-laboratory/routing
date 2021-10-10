@@ -150,7 +150,7 @@ class Router
      */
     public function middleware($middleware)
     {
-        return new static($this->routeCollector, $this->prefix, [...$this->middlewares, ...(array)$middleware]);
+        return new static($this->routeCollector, $this->prefix, array_unique([...$this->middlewares, ...(array)$middleware]));
     }
 
     /**

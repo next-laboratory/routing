@@ -42,9 +42,20 @@ class RouteCollector
     public function add(Route $route): RouteCollector
     {
         foreach ($route->methods as $method) {
-            $this->routes[$method][] = $route;
+            $this->addWithMethod($method, $route);
         }
         return $this;
+    }
+
+    /**
+     * 添加到分组后的路由中
+     *
+     * @param       $method
+     * @param Route $route
+     */
+    public function addWithMethod($method, Route $route)
+    {
+        $this->routes[$method][] = $route;
     }
 
     /**
