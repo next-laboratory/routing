@@ -56,9 +56,9 @@ class Route
     /**
      * 跨域允许
      *
-     * @var ?array
+     * @var array
      */
-    protected ?array $allowCrossDomain = null;
+    protected array $allowCrossDomain = [];
 
     /**
      * 路由参数
