@@ -4,8 +4,6 @@ declare (strict_types=1);
 namespace Max\Routing;
 
 use Max\App;
-use Max\Routing\Exceptions\RouteNotFoundException;
-use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * 路由操作类
@@ -150,7 +148,10 @@ class Router
      */
     public function middleware($middleware)
     {
-        return new static($this->routeCollector, $this->prefix, array_unique([...$this->middlewares, ...(array)$middleware]));
+        $new              = clone $this;
+        $new->middlewares = array_unique([...$this->middlewares, ...(array)$middleware]);
+        return $new;
+//        return new static($this->routeCollector, $this->prefix, array_unique([...$this->middlewares, ...(array)$middleware]));
     }
 
     /**
@@ -162,7 +163,10 @@ class Router
      */
     public function prefix(string $prefix)
     {
-        return new static($this->routeCollector, $this->prefix . $prefix, $this->middlewares);
+        $new         = clone $this;
+        $new->prefix = $this->prefix . $prefix;
+        return $new;
+//        return new static($this->routeCollector, $this->prefix . $prefix, $this->middlewares);
     }
 
 }
