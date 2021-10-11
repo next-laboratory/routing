@@ -3,7 +3,7 @@
 namespace Max\Routing\Annotations;
 
 use Max\Di\Annotations\Annotation;
-use Max\Facade\Route;
+use Max\Facades\Route;
 use Max\Routing\Contracts\MappingInterface;
 
 #[\Attribute(\Attribute::TARGET_METHOD)]
