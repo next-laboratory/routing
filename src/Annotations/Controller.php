@@ -12,13 +12,13 @@ class Controller extends Annotation
 {
     protected string $prefix = '';
 
-    protected array $middleware = [];
+    protected $middleware = [];
 
     public function __construct(...$args)
     {
         parent::__construct($args);
         $routeCollector = App::getInstance()->make(RouteCollector::class);
-        App::getInstance()->set('route', new Router($routeCollector, $this->prefix, $this->middleware));
+        App::getInstance()->set('route', new Router($routeCollector, $this->prefix, (array)$this->middleware));
     }
 
 }

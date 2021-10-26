@@ -17,7 +17,7 @@ class RuleMapping extends Annotation implements MappingInterface
 
     protected ?string $alias = null;
 
-    protected ?array $allowCrossDomain = null;
+    protected $allowCrossDomain = null;
 
     protected array $methods = ['GET', 'HEAD', 'POST'];
 
@@ -29,8 +29,10 @@ class RuleMapping extends Annotation implements MappingInterface
 
     public function register()
     {
-        $route = Route::rule($this->path, $this->controller . '@' . $this->method, $this->methods)
-            ->allowCrossDomain($this->allowCrossDomain);
+        $route = Route::rule($this->path, $this->controller . '@' . $this->method, $this->methods);
+        if ($this->allowCrossDomain) {
+            $route->allowCrossDomain((array)$this->allowCrossDomain);
+        }
         if ($this->alias) {
             $route->alias($this->alias);
         }
