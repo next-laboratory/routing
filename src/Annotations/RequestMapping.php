@@ -7,7 +7,7 @@ use Max\Facades\Route;
 use Max\Routing\Contracts\MappingInterface;
 
 #[\Attribute(\Attribute::TARGET_METHOD)]
-class RuleMapping extends Annotation implements MappingInterface
+class RequestMapping extends Annotation implements MappingInterface
 {
     protected string $path;
 
