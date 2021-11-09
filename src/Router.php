@@ -103,6 +103,19 @@ class Router
     }
 
     /**
+     * WebSocket路由
+     *
+     * @param string $uri
+     * @param        $controller
+     *
+     * @return Route
+     */
+    public function ws(string $uri, string $controller)
+    {
+        return $this->rule($uri, $controller, ['WS']);
+    }
+
+    /**
      * @param string   $uri
      * @param          $destination
      * @param string[] $methods
@@ -119,6 +132,7 @@ class Router
             'routeCollector' => $this->routeCollector,
         ]);
         $this->routeCollector->add($route);
+
         return $route;
     }
 
@@ -150,8 +164,8 @@ class Router
     {
         $new              = clone $this;
         $new->middlewares = array_unique([...$this->middlewares, ...(array)$middleware]);
+
         return $new;
-//        return new static($this->routeCollector, $this->prefix, array_unique([...$this->middlewares, ...(array)$middleware]));
     }
 
     /**
@@ -165,8 +179,8 @@ class Router
     {
         $new         = clone $this;
         $new->prefix = $this->prefix . $prefix;
+
         return $new;
-//        return new static($this->routeCollector, $this->prefix . $prefix, $this->middlewares);
     }
 
 }

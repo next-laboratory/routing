@@ -44,6 +44,7 @@ class RouteCollector
         foreach ($route->methods as $method) {
             $this->addWithMethod($method, $route);
         }
+
         return $this;
     }
 
@@ -68,6 +69,7 @@ class RouteCollector
     public function make(array $routes)
     {
         $this->routes = $routes;
+
         return $this;
     }
 
@@ -105,6 +107,7 @@ class RouteCollector
                     $route->routeParams = $match;
                 }
                 $route->destination = $this->parseDestination($route->destination);
+
                 return $route;
             }
         }
@@ -120,13 +123,10 @@ class RouteCollector
      */
     protected function parseDestination($destination)
     {
-        if (is_string($destination)) {
+        if (is_string($destination) && strpos($destination, '@')) {
             $destination = explode('@', $destination, 2);
-            if (2 !== count($destination)) {
-                throw new \InvalidArgumentException('路由参数不正确!');
-            }
-            return $destination;
         }
+
         return $destination;
     }
 
