@@ -103,19 +103,6 @@ class Router
     }
 
     /**
-     * WebSocket路由
-     *
-     * @param string $uri
-     * @param        $controller
-     *
-     * @return Route
-     */
-    public function ws(string $uri, string $controller)
-    {
-        return $this->rule($uri, $controller, ['WS']);
-    }
-
-    /**
      * @param string   $uri
      * @param          $destination
      * @param string[] $methods
