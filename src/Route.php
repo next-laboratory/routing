@@ -2,6 +2,9 @@
 
 namespace Max\Routing;
 
+/**
+ * @property string|array|\Closure $destination
+ */
 class Route
 {
     /**
