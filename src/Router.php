@@ -3,7 +3,7 @@ declare (strict_types=1);
 
 namespace Max\Routing;
 
-use Max\App;
+use Max\Foundation\App;
 
 /**
  * 路由操作类
@@ -105,11 +105,11 @@ class Router
     /**
      * @param string   $uri
      * @param          $destination
-     * @param string[] $methods
+     * @param array    $methods
      *
      * @return \Max\Routing\Route
      */
-    public function rule(string $uri, $destination, $methods = ['GET', 'HEAD', 'POST'])
+    public function rule(string $uri, $destination, array $methods = ['GET', 'HEAD', 'POST'])
     {
         $route = new Route([
             'uri'            => '/' . trim($this->prefix . $uri, '/'),

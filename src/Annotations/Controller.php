@@ -2,7 +2,7 @@
 
 namespace Max\Routing\Annotations;
 
-use Max\App;
+use Max\Foundation\App;
 use Max\Di\Annotations\Annotation;
 use Max\Routing\RouteCollector;
 use Max\Routing\Router;

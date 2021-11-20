@@ -3,7 +3,10 @@
 namespace Max\Routing;
 
 /**
+ * @property array                 $methods
  * @property string|array|\Closure $destination
+ * @property string                $uri
+ * @property array                 $routeParams
  */
 class Route
 {
@@ -173,18 +176,18 @@ class Route
 
     protected function call(string $key, $value, bool $arrayFlag = false)
     {
-        $this->$key = $arrayFlag ? (array)$value : $value;
+        $this->{$key} = $arrayFlag ? (array)$value : $value;
         return $this;
     }
 
     public function __get($key)
     {
-        return $this->$key ?? null;
+        return $this->{$key} ?? null;
     }
 
     public function __set($key, $value)
     {
-        $this->$key = $value;
+        $this->{$key} = $value;
     }
 
 }
