@@ -51,7 +51,7 @@ class RouteCollector
      *
      * @return $this
      */
-    public function make(array $routes)
+    public static function make(array $routes)
     {
         static::$routes = $routes;
     }
@@ -61,7 +61,7 @@ class RouteCollector
      *
      * @return array
      */
-    public function all(): array
+    public static function all(): array
     {
         return static::$routes;
     }
@@ -104,7 +104,7 @@ class RouteCollector
      *
      * @return false|mixed|string[]
      */
-    protected function parseDestination($destination)
+    protected static function parseDestination($destination)
     {
         if (is_string($destination) && strpos($destination, '@')) {
             $destination = explode('@', $destination, 2);
