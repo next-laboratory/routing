@@ -5,6 +5,7 @@ namespace Max\Routing\Annotations;
 use Max\Di\Annotations\Annotation;
 use Max\Foundation\Facades\Route;
 use Max\Routing\Contracts\MappingInterface;
+use Max\Routing\RouteCollector;
 
 #[\Attribute(\Attribute::TARGET_METHOD)]
 class RequestMapping extends Annotation implements MappingInterface
@@ -29,7 +30,7 @@ class RequestMapping extends Annotation implements MappingInterface
 
     public function register()
     {
-        $route = Route::rule($this->path, $this->controller . '@' . $this->method, $this->methods);
+        $route = RouteCollector::$router->request($this->path, $this->controller . '@' . $this->method, $this->methods);
         if ($this->allowCrossDomain) {
             $route->allowCrossDomain((array)$this->allowCrossDomain);
         }

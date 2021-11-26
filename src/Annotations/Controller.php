@@ -2,7 +2,6 @@
 
 namespace Max\Routing\Annotations;
 
-use Max\Foundation\App;
 use Max\Di\Annotations\Annotation;
 use Max\Routing\RouteCollector;
 use Max\Routing\Router;
@@ -17,8 +16,7 @@ class Controller extends Annotation
     public function __construct(...$args)
     {
         parent::__construct($args);
-        $routeCollector = App::getInstance()->make(RouteCollector::class);
-        App::getInstance()->set('route', new Router($routeCollector, $this->prefix, (array)$this->middleware));
+        RouteCollector::$router = new Router($this->prefix, (array)$this->middleware);
     }
 
 }
