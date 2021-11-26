@@ -3,8 +3,6 @@ declare (strict_types=1);
 
 namespace Max\Routing;
 
-use Max\Foundation\App;
-
 /**
  * 路由操作类
  * Class Router
@@ -27,6 +25,11 @@ class Router
      * @var string
      */
     protected string $prefix = '';
+
+    /**
+     * @var Router
+     */
+    public static Router $router;
 
     /**
      * 路由集合
@@ -130,14 +133,14 @@ class Router
      */
     public function group($group)
     {
-        $route = App::getInstance()->route;
-        App::getInstance()->set('route', $this);
+        $router         = static::$router;
+        static::$router = $this;
         if ($group instanceof \Closure) {
             $group($this);
         } else if (is_file($group)) {
             include($group);
         }
-        App::getInstance()->set('route', $route);
+        static::$router = $router;
     }
 
     /**
