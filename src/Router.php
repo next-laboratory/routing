@@ -48,6 +48,7 @@ class Router
         $this->prefix         = $prefix;
         $this->middlewares    = (array)$middlewares;
         $this->routeCollector = $routeCollector;
+        static::$router       = $this;
     }
 
     /**
