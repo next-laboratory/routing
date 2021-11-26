@@ -1,9 +1,8 @@
 一款简单的路由, 可以独立使用
 
 ```php
-$routeCollector = new RouteCollector();
 
-$router = new Router($routeCollector);
+$router = new Router();
 
 $router->get('index', function() {
     return 'test';
@@ -20,7 +19,7 @@ $router->prefix('api')->middleware('api')->group(function(Router $router) {
 })
 
 // 解析路由，返回匹配到的Route对象
-$route = $routeCollercor->resolve(ServerRequestInterface $request);
+$route = RouteCollector::resolve(ServerRequestInterface $request);
 
 var_dump($route);
 ```
