@@ -27,28 +27,14 @@ class Router
     protected string $prefix = '';
 
     /**
-     * @var Router
+     * @param string $prefix
+     * @param array  $middlewares
      */
-    public static Router $router;
-
-    /**
-     * 路由集合
-     *
-     * @var RouteCollector
-     */
-    protected RouteCollector $routeCollector;
-
-    /**
-     * @param string          $prefix
-     * @param array           $middlewares
-     * @param ?RouteCollector $routeCollector
-     */
-    public function __construct(RouteCollector $routeCollector, string $prefix = '', $middlewares = [])
+    public function __construct(string $prefix = '', $middlewares = [])
     {
-        $this->prefix         = $prefix;
-        $this->middlewares    = (array)$middlewares;
-        $this->routeCollector = $routeCollector;
-        static::$router       = $this;
+        $this->prefix           = $prefix;
+        $this->middlewares      = (array)$middlewares;
+        RouteCollector::$router = $this;
     }
 
     /**
@@ -59,7 +45,7 @@ class Router
      */
     public function patch(string $uri, $destination)
     {
-        return $this->rule($uri, $destination, ['PATCH']);
+        return $this->request($uri, $destination, ['PATCH']);
     }
 
     /**
@@ -70,7 +56,7 @@ class Router
      */
     public function put(string $uri, $destination)
     {
-        return $this->rule($uri, $destination, ['PUT']);
+        return $this->request($uri, $destination, ['PUT']);
     }
 
     /**
@@ -81,7 +67,7 @@ class Router
      */
     public function delete(string $uri, $destination)
     {
-        return $this->rule($uri, $destination, ['DELETE']);
+        return $this->request($uri, $destination, ['DELETE']);
     }
 
     /**
@@ -92,7 +78,7 @@ class Router
      */
     public function post(string $uri, $destination)
     {
-        return $this->rule($uri, $destination, ['POST']);
+        return $this->request($uri, $destination, ['POST']);
     }
 
     /**
@@ -103,7 +89,7 @@ class Router
      */
     public function get(string $uri, $destination)
     {
-        return $this->rule($uri, $destination, ['GET', 'HEAD']);
+        return $this->request($uri, $destination, ['GET', 'HEAD']);
     }
 
     /**
@@ -113,16 +99,15 @@ class Router
      *
      * @return \Max\Routing\Route
      */
-    public function rule(string $uri, $destination, array $methods = ['GET', 'HEAD', 'POST'])
+    public function request(string $uri, $destination, array $methods = ['GET', 'HEAD', 'POST'])
     {
         $route = new Route([
-            'uri'            => '/' . trim($this->prefix . $uri, '/'),
-            'destination'    => $destination,
-            'methods'        => $methods,
-            'middleware'     => $this->middlewares,
-            'routeCollector' => $this->routeCollector,
+            'uri'         => '/' . trim($this->prefix . $uri, '/'),
+            'destination' => $destination,
+            'methods'     => $methods,
+            'middleware'  => $this->middlewares,
         ]);
-        $this->routeCollector->add($route);
+        RouteCollector::add($route);
 
         return $route;
     }
@@ -134,14 +119,14 @@ class Router
      */
     public function group($group)
     {
-        $router         = static::$router;
-        static::$router = $this;
+        $router                 = RouteCollector::$router;
+        RouteCollector::$router = $this;
         if ($group instanceof \Closure) {
             $group($this);
         } else if (is_file($group)) {
             include($group);
         }
-        static::$router = $router;
+        RouteCollector::$router = $router;
     }
 
     /**

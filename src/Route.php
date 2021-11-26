@@ -74,13 +74,6 @@ class Route
     protected array $routeParams = [];
 
     /**
-     * 路由集合
-     *
-     * @var RouteCollector
-     */
-    protected RouteCollector $routeCollector;
-
-    /**
      * 初始化数据
      * Route constructor.
      *
@@ -157,7 +150,7 @@ class Route
     public function allowCrossDomain($allowDomain)
     {
         $this->methods[] = 'OPTIONS';
-        $this->routeCollector->addWithMethod('OPTIONS', $this);
+        RouteCollector::addWithMethod('OPTIONS', $this);
         return $this->call(__FUNCTION__, $allowDomain, true);
     }
 
@@ -170,7 +163,7 @@ class Route
      */
     public function alias(string $alias)
     {
-        $this->routeCollector->getUrl()->set($alias, $this->uri);
+        Url::set($alias, $this->uri);
         return $this->call(__FUNCTION__, $alias);
     }
 

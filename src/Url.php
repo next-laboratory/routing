@@ -10,8 +10,7 @@ class Url
      *
      * @var array
      */
-    protected array $alias = [];
-
+    protected static array $alias = [];
 
     /**
      * 使用url获取路由别名
@@ -20,18 +19,18 @@ class Url
      *
      * @return false|int|string
      */
-    public function getAliasByUri($url)
+    public static function getAliasByUri($url)
     {
-        if (false !== ($key = array_search($url, $this->alias))) {
+        if (false !== ($key = array_search($url, static::$alias))) {
             return $key;
         }
         return null;
     }
 
-    public function set(string $alias, string $uri)
+    public static function set(string $alias, string $uri)
     {
         // TODO 重复alias
-        $this->alias[$alias] = $uri;
+        static::$alias[$alias] = $uri;
     }
 
     /**
@@ -43,11 +42,11 @@ class Url
      * @return mixed|string
      * @throws \Exception
      */
-    public function build(string $alias, array $args = [])
+    public static function build(string $alias, array $args = [])
     {
-        if (isset($this->alias[$alias])) {
-            if (preg_match('/\(.+\)/i', $this->alias[$alias])) {
-                $rep = explode(',', preg_replace(['#\\\#', '#\(.+\)#Ui'], ['', ','], $this->alias[$alias]));
+        if (isset(static::$alias[$alias])) {
+            if (preg_match('/\(.+\)/i', static::$alias[$alias])) {
+                $rep = explode(',', preg_replace(['#\\\#', '#\(.+\)#Ui'], ['', ','], static::$alias[$alias]));
                 if (($argNums = count($rep) - 1) != count($args)) {
                     throw new \Exception("别名:{$alias}需要传入{$argNums}个参数！");
                 }
@@ -58,7 +57,7 @@ class Url
                 }
                 return $match;
             }
-            return $this->alias[$alias];
+            return static::$alias[$alias];
         }
         return $alias;
     }

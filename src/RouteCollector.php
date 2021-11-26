@@ -12,25 +12,12 @@ class RouteCollector
      *
      * @var array
      */
-    protected array $routes = [];
+    protected static array $routes = [];
 
     /**
-     * @var Url
+     * @var Router
      */
-    protected Url $url;
-
-    public function __construct()
-    {
-        $this->url = new Url();
-    }
-
-    /**
-     * @return Url
-     */
-    public function getUrl()
-    {
-        return $this->url;
-    }
+    public static Router $router;
 
     /**
      * 添加一个路由
@@ -39,13 +26,11 @@ class RouteCollector
      *
      * @return $this
      */
-    public function add(Route $route): RouteCollector
+    public static function add(Route $route)
     {
         foreach ($route->methods as $method) {
-            $this->addWithMethod($method, $route);
+            static::addWithMethod($method, $route);
         }
-
-        return $this;
     }
 
     /**
@@ -54,9 +39,9 @@ class RouteCollector
      * @param       $method
      * @param Route $route
      */
-    public function addWithMethod($method, Route $route)
+    public static function addWithMethod($method, Route $route)
     {
-        $this->routes[$method][] = $route;
+        static::$routes[$method][] = $route;
     }
 
     /**
@@ -68,9 +53,7 @@ class RouteCollector
      */
     public function make(array $routes)
     {
-        $this->routes = $routes;
-
-        return $this;
+        static::$routes = $routes;
     }
 
     /**
@@ -80,7 +63,7 @@ class RouteCollector
      */
     public function all(): array
     {
-        return $this->routes;
+        return static::$routes;
     }
 
     /**
@@ -91,14 +74,14 @@ class RouteCollector
      * @return Route
      * @throws RouteNotFoundException
      */
-    public function resolve(ServerRequestInterface $request): Route
+    public static function resolve(ServerRequestInterface $request): Route
     {
         $requestUri    = $request->getUri()->getPath();
         $requestMethod = $request->getMethod();
-        if (!isset($this->routes[$requestMethod])) {
+        if (!isset(static::$routes[$requestMethod])) {
             throw new RouteNotFoundException('Method Not Allowed : ' . $requestMethod, 405);
         }
-        foreach ($this->routes[$requestMethod] as $route) {
+        foreach (static::$routes[$requestMethod] as $route) {
             /* @var Route $route */
             $uri = $route->uri;
             if ($uri === $requestUri || preg_match('#^' . $uri . '$#iU', $requestUri, $match)) {
@@ -106,7 +89,7 @@ class RouteCollector
                     array_shift($match);
                     $route->routeParams = $match;
                 }
-                $route->destination = $this->parseDestination($route->destination);
+                $route->destination = static::parseDestination($route->destination);
 
                 return $route;
             }
@@ -129,19 +112,4 @@ class RouteCollector
 
         return $destination;
     }
-
-    /**
-     * 使用别名生成url
-     *
-     * @param string $alias
-     * @param array  $args
-     *
-     * @return mixed|string
-     * @throws \Exception
-     */
-    public function buildUrl(string $alias, array $args = [])
-    {
-        return $this->url->build($alias, $args);
-    }
-
 }
