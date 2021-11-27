@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Max\Routing\Annotations;
 
@@ -22,6 +23,14 @@ class RequestMapping extends Annotation implements MappingInterface
 
     protected array $methods = ['GET', 'HEAD', 'POST'];
 
+    /**
+     * 需要传递当前控制器和请求请求的方法
+     *
+     * @param string $controller
+     * @param string $method
+     *
+     * @return mixed|void
+     */
     public function set(string $controller, string $method)
     {
         $this->controller = $controller;

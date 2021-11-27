@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Max\Routing;
 
@@ -89,27 +90,10 @@ class RouteCollector
                     array_shift($match);
                     $route->routeParams = $match;
                 }
-                $route->destination = static::parseDestination($route->destination);
 
                 return $route;
             }
         }
         throw new RouteNotFoundException('Not Found', 404);
-    }
-
-    /**
-     * 将字符串地址解析为callable
-     *
-     * @param $destination
-     *
-     * @return false|mixed|string[]
-     */
-    protected static function parseDestination($destination)
-    {
-        if (is_string($destination) && strpos($destination, '@')) {
-            $destination = explode('@', $destination, 2);
-        }
-
-        return $destination;
     }
 }
