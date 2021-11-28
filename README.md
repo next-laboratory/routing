@@ -18,8 +18,8 @@ $router->prefix('api')->middleware('api')->group(function(Router $router) {
     }
 })
 
-// 解析路由，返回匹配到的Route对象
-$route = RouteCollector::resolve(ServerRequestInterface $request);
+// 解析路由，返回匹配到的Route对象, $request必须实现Psr ServerRequestInterface
+$route = RouteCollector::resolve($request);
 
 var_dump($route);
 ```
