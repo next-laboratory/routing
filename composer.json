@@ -1,10 +1,10 @@
 {
     "name": "max/routing",
-    "description": "一个简单易用的路由",
+    "description": "A lightweight and fast routing component.",
     "authors": [
         {
-            "name": "chengyao",
-            "email": "bigyao@139.com"
+            "name": "ChengYao",
+            "email": "987861463@qq.com"
         }
     ],
     "type": "library",
