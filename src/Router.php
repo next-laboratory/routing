@@ -154,7 +154,7 @@ class Router
     public function prefix(string $prefix)
     {
         $new         = clone $this;
-        $new->prefix = $this->prefix . $prefix;
+        $new->prefix .= $prefix;
 
         return $new;
     }
