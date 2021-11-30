@@ -5,8 +5,13 @@ namespace Max\Routing;
 
 /**
  * @property array                 $methods
+ * @property array                 $middleware
  * @property string|array|\Closure $destination
  * @property string                $uri
+ * @property string                $alias
+ * @property array                 $allowCrossDomain
+ * @property string                $ext
+ * @property int|false             $cache
  * @property array                 $routeParams
  */
 class Route
@@ -78,13 +83,13 @@ class Route
      * 初始化数据
      * Route constructor.
      *
-     * @param iterable $route
+     * @param array $route
      */
-    public function __construct(iterable $route)
+    public function __construct(array $route)
     {
         foreach ($route as $key => $value) {
-            if (property_exists($this, $key)) {
-                $this->$key = $value;
+            if (\property_exists($this, $key)) {
+                $this->{$key} = $value;
             }
         }
     }
@@ -126,7 +131,7 @@ class Route
      */
     public function middleware($middleware)
     {
-        return $this->call(__FUNCTION__, array_unique([...$this->middleware, ...(array)$middleware]), true);
+        return $this->call(__FUNCTION__, \array_unique([...$this->middleware, ...(array)$middleware]), true);
     }
 
     /**

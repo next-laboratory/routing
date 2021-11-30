@@ -60,7 +60,7 @@ class RouteCollector
      *
      * @return $this
      */
-    public static function make(array $routes)
+    public static function replace(array $routes)
     {
         static::$routes = $routes;
     }
@@ -100,5 +100,46 @@ class RouteCollector
             }
         }
         throw new RouteNotFoundException('Not Found', 404);
+    }
+
+    /**
+     * 导出
+     *
+     * @return array
+     */
+    public static function export()
+    {
+        $export = [];
+        foreach (static::$routes as $method => $routes) {
+            /* @var Route $route */
+            foreach ($routes as $route) {
+                $export[$method][] = [
+                    'uri'              => $route->uri,
+                    'methods'          => $route->methods,
+                    'destination'      => $route->destination,
+                    'middleware'       => $route->middleware,
+                    'ext'              => $route->ext,
+                    'cache'            => $route->cache,
+                    'alias'            => $route->alias,
+                    'allowCrossDomain' => $route->allowCrossDomain,
+                    'routeParams'      => $route->routeParams
+                ];
+            }
+        }
+        return $export;
+    }
+
+    /**
+     * 导入
+     *
+     * @param array $import
+     */
+    public static function import(array $import)
+    {
+        foreach ($import as $methods => $routes) {
+            foreach ($routes as $route) {
+                static::add(new Route($routes));
+            }
+        }
     }
 }
