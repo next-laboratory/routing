@@ -45,6 +45,14 @@ class RouteCollector
         static::$routes[$method][] = $route;
     }
 
+    public static function getByMethod(string $method)
+    {
+        if (isset(static::$routes[$method])) {
+            return static::$routes[$method];
+        }
+        throw new \Exception('Method not allowed: ' . $method, 405);
+    }
+
     /**
      * 直接替换路由
      *
@@ -79,10 +87,7 @@ class RouteCollector
     {
         $requestUri    = $request->getUri()->getPath();
         $requestMethod = $request->getMethod();
-        if (!isset(static::$routes[$requestMethod])) {
-            throw new RouteNotFoundException('Method Not Allowed : ' . $requestMethod, 405);
-        }
-        foreach (static::$routes[$requestMethod] as $route) {
+        foreach (static::getByMethod($requestMethod) as $route) {
             /* @var Route $route */
             $uri = $route->uri;
             if ($uri === $requestUri || preg_match('#^' . $uri . '$#iU', $requestUri, $match)) {

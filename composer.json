@@ -18,6 +18,11 @@
             "Max\\Routing\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Max\\Routing\\Tests\\": "tests/"
+        }
+    },
     "extra": {
         "max": {
             "config": {
