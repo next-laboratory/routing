@@ -10,14 +10,18 @@ use Max\Routing\Router;
 #[\Attribute(\Attribute::TARGET_CLASS)]
 class Controller extends Annotation
 {
-    protected string $prefix = '';
-
-    protected $middleware = [];
+    protected string $prefix     = '';
+    protected array  $middleware = [];
 
     public function __construct(...$args)
     {
         parent::__construct($args);
         RouteCollector::$router = new Router($this->prefix, (array)$this->middleware);
+    }
+
+    public function __destruct()
+    {
+        RouteCollector::refresh();
     }
 
 }

@@ -6,7 +6,7 @@ return [
     // 路由注解
     'annotation' => [
         'enable'   => false,
-        'scan_dir' => env('root_path') . 'app/Http/Controllers',
+        // 注解扫描路径，从根目录开始并且命名空间以base_dir开头
         'base_dir' => 'app/Http/Controllers',
     ],
 ];

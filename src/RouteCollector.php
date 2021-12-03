@@ -45,6 +45,12 @@ class RouteCollector
         static::$routes[$method][] = $route;
     }
 
+    /**
+     * @param string $method
+     *
+     * @return mixed
+     * @throws \Exception
+     */
     public static function getByMethod(string $method)
     {
         if (isset(static::$routes[$method])) {
@@ -141,5 +147,15 @@ class RouteCollector
                 static::add(new Route($routes));
             }
         }
+    }
+
+    /**
+     * 刷新
+     *
+     * @return void
+     */
+    public static function refresh()
+    {
+        static::$router = new Router();
     }
 }

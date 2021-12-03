@@ -11,13 +11,10 @@ use Max\Routing\RouteCollector;
 #[\Attribute(\Attribute::TARGET_METHOD)]
 class RequestMapping extends Annotation implements MappingInterface
 {
-    protected string $path;
-
-    protected ?string $alias = null;
-
-    protected $allowCrossDomain = null;
-
-    protected array $methods = ['GET', 'HEAD', 'POST'];
+    protected string  $path;
+    protected ?string $alias            = null;
+    protected         $allowCrossDomain = null;
+    protected array   $methods          = ['GET', 'HEAD', 'POST'];
 
     public function register(string $controller, string $method)
     {
