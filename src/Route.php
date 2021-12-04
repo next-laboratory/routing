@@ -3,17 +3,6 @@ declare(strict_types=1);
 
 namespace Max\Routing;
 
-/**
- * @property array                 $methods
- * @property array                 $middleware
- * @property string|array|\Closure $destination
- * @property string                $uri
- * @property string                $alias
- * @property array                 $allowCrossDomain
- * @property string                $ext
- * @property int|false             $cache
- * @property array                 $routeParams
- */
 class Route
 {
     /**
