@@ -115,17 +115,13 @@ class Router
     /**
      * 分组路由
      *
-     * @param $group
+     * @param \Closure $group
      */
-    public function group($group)
+    public function group(\Closure $group)
     {
         $router                 = RouteCollector::$router;
         RouteCollector::$router = $this;
-        if ($group instanceof \Closure) {
-            $group($this);
-        } else if (is_file($group)) {
-            include($group);
-        }
+        $group($this);
         RouteCollector::$router = $router;
     }
 
