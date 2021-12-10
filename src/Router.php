@@ -3,13 +3,6 @@ declare (strict_types=1);
 
 namespace Max\Routing;
 
-/**
- * 路由操作类
- * Class Router
- *
- * @package Max\Http
- * @author  chengyao
- */
 class Router
 {
     /**
@@ -25,6 +18,16 @@ class Router
      * @var string
      */
     protected string $prefix = '';
+
+    /**
+     * @var string|null
+     */
+    protected ?string $controller = null;
+
+    /**
+     * @var string
+     */
+    protected string $namespace = '';
 
     /**
      * @param string $prefix
@@ -103,7 +106,7 @@ class Router
     {
         $route = new Route([
             'uri'         => '/' . trim($this->prefix . $uri, '/'),
-            'destination' => $destination,
+            'destination' => $this->createDestination($destination),
             'methods'     => $methods,
             'middleware'  => $this->middlewares,
         ]);
@@ -113,15 +116,46 @@ class Router
     }
 
     /**
+     * 这个并没有重用，但是还是分离出来了
+     *
+     * @param $destination
+     *
+     * @return mixed|string
+     */
+    protected function createDestination($destination)
+    {
+        if (is_string($destination)) {
+            if (!is_null($this->controller)) {
+                return sprintf('%s@%s', $this->controller, $destination);
+            }
+            if ('' !== $this->namespace) {
+                return ltrim(sprintf('%s\\%s', $this->namespace, $destination), '\\');
+            }
+        }
+
+        return $destination;
+    }
+
+    /**
      * 分组路由
      *
      * @param \Closure $group
      */
-    public function group(\Closure $group)
+    public function group(\Closure $group, array $options = [])
     {
-        $router                 = RouteCollector::$router;
-        RouteCollector::$router = $this;
-        $group($this);
+        $router = RouteCollector::$router;
+        $new    = $this;
+        if (!empty($options)) {
+            $new = clone $this;
+            foreach ($options as $key => $value) {
+                $method = 'prepare' . ucfirst($key);
+                if (method_exists($new, $method)) {
+                    $new->{$key} = $new->{$method}($value);
+                }
+            }
+        }
+        RouteCollector::$router = $new;
+        $group($new);
         RouteCollector::$router = $router;
     }
 
@@ -135,9 +169,19 @@ class Router
     public function middleware($middleware)
     {
         $new              = clone $this;
-        $new->middlewares = array_unique([...$this->middlewares, ...(array)$middleware]);
+        $new->middlewares = $new->prepareMiddleware($middleware);
 
         return $new;
+    }
+
+    /**
+     * @param $middleware
+     *
+     * @return mixed
+     */
+    protected function prepareMiddleware($middleware)
+    {
+        return array_unique([...$this->middlewares, ...(array)$middleware]);
     }
 
     /**
@@ -150,9 +194,69 @@ class Router
     public function prefix(string $prefix)
     {
         $new         = clone $this;
-        $new->prefix .= $prefix;
+        $new->prefix = $new->preparePrefix($prefix);
 
         return $new;
+    }
+
+    /**
+     * @param string $prefix
+     *
+     * @return string
+     */
+    protected function preparePrefix(string $prefix)
+    {
+        return $this->prefix . $prefix;
+    }
+
+    /**
+     * 如果有控制器，则namespace失效
+     *
+     * @param string $controller
+     *
+     * @return Router
+     */
+    public function controller(string $controller)
+    {
+        $new             = clone $this;
+        $new->controller = $new->prepareController($controller);
+
+        return $new;
+    }
+
+    /**
+     * @param string $controller
+     *
+     * @return string
+     */
+    protected function prepareController(string $controller)
+    {
+        return $controller;
+    }
+
+    /**
+     * 如果有控制器，则namespace失效
+     *
+     * @param string $namespace
+     *
+     * @return Router
+     */
+    public function namespace(string $namespace)
+    {
+        $new            = clone $this;
+        $new->namespace = $new->prepareNamespace($namespace);
+
+        return $new;
+    }
+
+    /**
+     * @param string $namespace
+     *
+     * @return string
+     */
+    protected function prepareNamespace(string $namespace)
+    {
+        return sprintf('%s\\%s', $this->namespace, $namespace);
     }
 
 }
