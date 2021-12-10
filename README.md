@@ -24,6 +24,19 @@ $route = RouteCollector::resolve($request);
 var_dump($route);
 ```
 
+此外还有一系列方法，例如
+```php
+Route::namespace('App\Http\Controllers')->controller('IndexController')->get('/', 'index');
+```
+对于分组，`group` 方法还可以传入第二个参数`options`, 参数需要关联数组，数组的键可以是以下之一或多个
+
+- prefix
+- middleware
+- controller
+- namespace
+
+使用数组传参比链式调用效率高
+
 如果你使用了MaxPHP，那么可以直接使用路由的门面
 
 ```php
