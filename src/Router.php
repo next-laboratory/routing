@@ -126,10 +126,10 @@ class Router
     {
         if (is_string($destination)) {
             if (!is_null($this->controller)) {
-                return sprintf('%s@%s', $this->controller, $destination);
+                $destination = sprintf('%s@%s', $this->controller, $destination);
             }
             if ('' !== $this->namespace) {
-                return ltrim(sprintf('%s\\%s', $this->namespace, $destination), '\\');
+                $destination = ltrim(sprintf('%s\\%s', $this->namespace, $destination), '\\');
             }
         }
 
