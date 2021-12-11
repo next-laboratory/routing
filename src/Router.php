@@ -210,8 +210,6 @@ class Router
     }
 
     /**
-     * 如果有控制器，则namespace失效
-     *
      * @param string $controller
      *
      * @return Router
@@ -235,8 +233,6 @@ class Router
     }
 
     /**
-     * 如果有控制器，则namespace失效
-     *
      * @param string $namespace
      *
      * @return Router
