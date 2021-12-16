@@ -18,7 +18,7 @@ class Controller extends Annotation
         parent::__construct($args);
         RouteCollector::$router = new Router([
             'prefix'     => $this->prefix,
-            'middleware' => (array)$this->middleware,
+            'middlewares' => (array)$this->middleware,
         ]);
     }
 
