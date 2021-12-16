@@ -3,6 +3,13 @@ declare (strict_types=1);
 
 namespace Max\Routing;
 
+/**
+ * @class   Router
+ * @author  ChengYao
+ * @date    2021/12/16
+ * @time    9:23
+ * @package Max\Routing
+ */
 class Router
 {
     /**
@@ -33,10 +40,13 @@ class Router
      * @param string $prefix
      * @param array  $middlewares
      */
-    public function __construct(string $prefix = '', $middlewares = [])
+    public function __construct(array $options = [])
     {
-        $this->prefix           = $prefix;
-        $this->middlewares      = (array)$middlewares;
+        foreach ($options as $key => $value) {
+            if (property_exists($this, $key)) {
+                $this->{$key} = $value;
+            }
+        }
         RouteCollector::$router = $this;
     }
 

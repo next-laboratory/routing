@@ -3,6 +3,13 @@ declare(strict_types=1);
 
 namespace Max\Routing;
 
+/**
+ * @class   Route
+ * @author  ChengYao
+ * @date    2021/12/15
+ * @time    9:51
+ * @package Max\Routing
+ */
 class Route
 {
     /**
@@ -74,7 +81,7 @@ class Route
      *
      * @param array $route
      */
-    public function __construct(array $route)
+    public function __construct(array $route = [])
     {
         foreach ($route as $key => $value) {
             if (\property_exists($this, $key)) {
@@ -162,17 +169,35 @@ class Route
         return $this->call(__FUNCTION__, $alias);
     }
 
+    /**
+     * @param string $key
+     * @param        $value
+     * @param bool   $arrayFlag
+     *
+     * @return $this
+     */
     protected function call(string $key, $value, bool $arrayFlag = false)
     {
         $this->{$key} = $arrayFlag ? (array)$value : $value;
         return $this;
     }
 
+    /**
+     * @param $key
+     *
+     * @return null
+     */
     public function __get($key)
     {
         return $this->{$key} ?? null;
     }
 
+    /**
+     * @param $key
+     * @param $value
+     *
+     * @return void
+     */
     public function __set($key, $value)
     {
         $this->{$key} = $value;
