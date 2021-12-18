@@ -6,6 +6,13 @@ namespace Max\Routing;
 use Max\Routing\Exceptions\RouteNotFoundException;
 use Psr\Http\Message\ServerRequestInterface;
 
+/**
+ * @class   RouteCollector
+ * @author  ChengYao
+ * @date    2021/12/18
+ * @time    9:26
+ * @package Max\Routing
+ */
 class RouteCollector
 {
     /**
@@ -79,6 +86,14 @@ class RouteCollector
     public static function all(): array
     {
         return static::$routes;
+    }
+
+    /**
+     * @return void
+     */
+    public function flush()
+    {
+        static::$routes = [];
     }
 
     /**

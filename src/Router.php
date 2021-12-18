@@ -6,7 +6,7 @@ namespace Max\Routing;
 /**
  * @class   Router
  * @author  ChengYao
- * @date    2021/12/16
+ * @date    2021/12/18
  * @time    9:23
  * @package Max\Routing
  */
@@ -265,4 +265,35 @@ class Router
         return sprintf('%s\\%s', $this->namespace, $namespace);
     }
 
+    /**
+     * @return array
+     */
+    public function getMiddlewares(): array
+    {
+        return $this->middlewares;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPrefix(): string
+    {
+        return $this->prefix;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getController(): ?string
+    {
+        return $this->controller;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNamespace(): string
+    {
+        return $this->namespace;
+    }
 }

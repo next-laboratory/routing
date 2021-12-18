@@ -6,8 +6,8 @@ namespace Max\Routing;
 /**
  * @class   Route
  * @author  ChengYao
- * @date    2021/12/15
- * @time    9:51
+ * @date    2021/12/18
+ * @time    9:26
  * @package Max\Routing
  */
 class Route
@@ -183,9 +183,154 @@ class Route
     }
 
     /**
+     * @return string
+     */
+    public function getUri(): string
+    {
+        return $this->uri;
+    }
+
+    /**
+     * @return array
+     */
+    public function getMethods(): array
+    {
+        return $this->methods;
+    }
+
+    /**
+     * @return array|\Closure|string
+     */
+    public function getDestination()
+    {
+        return $this->destination;
+    }
+
+    /**
+     * @return array
+     */
+    public function getMiddleware(): array
+    {
+        return $this->middleware;
+    }
+
+    /**
+     * @return string
+     */
+    public function getExt(): string
+    {
+        return $this->ext;
+    }
+
+    /**
+     * @return false|int
+     */
+    public function getCache()
+    {
+        return $this->cache;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getAlias(): ?string
+    {
+        return $this->alias;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAllowCrossDomain(): array
+    {
+        return $this->allowCrossDomain;
+    }
+
+    /**
+     * @return array
+     */
+    public function getRouteParams(): array
+    {
+        return $this->routeParams;
+    }
+
+    /**
+     * @param string $uri
+     */
+    public function setUri(string $uri): void
+    {
+        $this->uri = $uri;
+    }
+
+    /**
+     * @param array $methods
+     */
+    public function setMethods(array $methods): void
+    {
+        $this->methods = $methods;
+    }
+
+    /**
+     * @param array|\Closure|string $destination
+     */
+    public function setDestination($destination): void
+    {
+        $this->destination = $destination;
+    }
+
+    /**
+     * @param array $middleware
+     */
+    public function setMiddleware(array $middleware): void
+    {
+        $this->middleware = $middleware;
+    }
+
+    /**
+     * @param string $ext
+     */
+    public function setExt(string $ext): void
+    {
+        $this->ext = $ext;
+    }
+
+    /**
+     * @param false|int $cache
+     */
+    public function setCache($cache): void
+    {
+        $this->cache = $cache;
+    }
+
+    /**
+     * @param string|null $alias
+     */
+    public function setAlias(?string $alias): void
+    {
+        $this->alias = $alias;
+    }
+
+    /**
+     * @param array $allowCrossDomain
+     */
+    public function setAllowCrossDomain(array $allowCrossDomain): void
+    {
+        $this->allowCrossDomain = $allowCrossDomain;
+    }
+
+    /**
+     * @param array $routeParams
+     */
+    public function setRouteParams(array $routeParams): void
+    {
+        $this->routeParams = $routeParams;
+    }
+
+    /**
      * @param $key
      *
      * @return null
+     * @deprecated
      */
     public function __get($key)
     {
@@ -197,10 +342,12 @@ class Route
      * @param $value
      *
      * @return void
+     * @deprecated
      */
     public function __set($key, $value)
     {
         $this->{$key} = $value;
     }
+
 
 }
