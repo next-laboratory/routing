@@ -36,7 +36,7 @@ class RouteCollector
      */
     public static function add(Route $route)
     {
-        foreach ($route->methods as $method) {
+        foreach ($route->getMethods() as $method) {
             static::addWithMethod($method, $route);
         }
     }
@@ -135,15 +135,15 @@ class RouteCollector
             /* @var Route $route */
             foreach ($routes as $route) {
                 $export[$method][] = [
-                    'uri'              => $route->uri,
-                    'methods'          => $route->methods,
-                    'destination'      => $route->destination,
-                    'middleware'       => $route->middleware,
-                    'ext'              => $route->ext,
-                    'cache'            => $route->cache,
-                    'alias'            => $route->alias,
-                    'allowCrossDomain' => $route->allowCrossDomain,
-                    'routeParams'      => $route->routeParams
+                    'uri'              => $route->getUri(),
+                    'methods'          => $route->getMethods(),
+                    'destination'      => $route->getDestination(),
+                    'middleware'       => $route->getMiddleware(),
+                    'ext'              => $route->getExt(),
+                    'cache'            => $route->getCache(),
+                    'alias'            => $route->getAlias(),
+                    'allowCrossDomain' => $route->getAllowCrossDomain(),
+                    'routeParams'      => $route->getRouteParams()
                 ];
             }
         }
