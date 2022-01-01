@@ -6,8 +6,8 @@ namespace Max\Routing;
 /**
  * @class   Route
  * @author  ChengYao
- * @date    2021/12/18
- * @time    9:26
+ * @date    2022/1/1
+ * @time    23:07
  * @package Max\Routing
  */
 class Route
@@ -31,14 +31,14 @@ class Route
      *
      * @var \Closure|array|string
      */
-    protected $destination;
+    protected $action;
 
     /**
      * 中间件
      *
      * @var array
      */
-    protected array $middleware = [];
+    protected array $middlewares = [];
 
     /**
      * 后缀
@@ -99,8 +99,8 @@ class Route
      */
     public function withoutMiddleware(string $middleware)
     {
-        if ($key = array_search($middleware, $this->middleware)) {
-            unset($this->middleware[$key]);
+        if ($key = array_search($middleware, $this->middlewares)) {
+            unset($this->middlewares[$key]);
         }
         return $this;
     }
@@ -127,7 +127,7 @@ class Route
      */
     public function middleware($middleware)
     {
-        return $this->call(__FUNCTION__, \array_unique([...$this->middleware, ...(array)$middleware]), true);
+        return $this->call(__FUNCTION__, \array_unique([...$this->middlewares, ...(array)$middleware]), true);
     }
 
     /**
@@ -201,17 +201,17 @@ class Route
     /**
      * @return array|\Closure|string
      */
-    public function getDestination()
+    public function getAction()
     {
-        return $this->destination;
+        return $this->action;
     }
 
     /**
      * @return array
      */
-    public function getMiddleware(): array
+    public function getMiddlewares(): array
     {
-        return $this->middleware;
+        return $this->middlewares;
     }
 
     /**
@@ -271,19 +271,19 @@ class Route
     }
 
     /**
-     * @param array|\Closure|string $destination
+     * @param array|\Closure|string $action
      */
-    public function setDestination($destination): void
+    public function setAction($action): void
     {
-        $this->destination = $destination;
+        $this->action = $action;
     }
 
     /**
-     * @param array $middleware
+     * @param array $middlewares
      */
-    public function setMiddleware(array $middleware): void
+    public function setMiddlewares(array $middlewares): void
     {
-        $this->middleware = $middleware;
+        $this->middlewares = $middlewares;
     }
 
     /**
@@ -348,6 +348,4 @@ class Route
     {
         $this->{$key} = $value;
     }
-
-
 }

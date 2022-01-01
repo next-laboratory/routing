@@ -6,8 +6,8 @@ namespace Max\Routing;
 /**
  * @class   Router
  * @author  ChengYao
- * @date    2021/12/18
- * @time    9:23
+ * @date    2022/1/1
+ * @time    23:09
  * @package Max\Routing
  */
 class Router
@@ -52,73 +52,84 @@ class Router
 
     /**
      * @param string $uri
-     * @param        $destination
+     * @param        $action
      *
      * @return \Max\Routing\Route
      */
-    public function patch(string $uri, $destination)
+    public function patch(string $uri, $action)
     {
-        return $this->request($uri, $destination, ['PATCH']);
+        return $this->request($uri, $action, ['PATCH']);
     }
 
     /**
      * @param string $uri
-     * @param        $destination
+     * @param        $action
      *
      * @return \Max\Routing\Route
      */
-    public function put(string $uri, $destination)
+    public function put(string $uri, $action)
     {
-        return $this->request($uri, $destination, ['PUT']);
+        return $this->request($uri, $action, ['PUT']);
     }
 
     /**
      * @param string $uri
-     * @param        $destination
+     * @param        $action
      *
      * @return \Max\Routing\Route
      */
-    public function delete(string $uri, $destination)
+    public function delete(string $uri, $action)
     {
-        return $this->request($uri, $destination, ['DELETE']);
+        return $this->request($uri, $action, ['DELETE']);
     }
 
     /**
      * @param string $uri
-     * @param        $destination
+     * @param        $action
      *
      * @return \Max\Routing\Route
      */
-    public function post(string $uri, $destination)
+    public function post(string $uri, $action)
     {
-        return $this->request($uri, $destination, ['POST']);
+        return $this->request($uri, $action, ['POST']);
     }
 
     /**
      * @param string $uri
-     * @param        $destination
+     * @param        $action
      *
      * @return \Max\Routing\Route
      */
-    public function get(string $uri, $destination)
+    public function get(string $uri, $action)
     {
-        return $this->request($uri, $destination, ['GET', 'HEAD']);
+        return $this->request($uri, $action, ['GET', 'HEAD']);
     }
 
     /**
-     * @param string   $uri
-     * @param          $destination
-     * @param array    $methods
+     * @param string $uri
+     * @param        $action
+     *
+     * @return Route
+     */
+    public function options(string $uri, $action)
+    {
+        return $this->request($uri, $action, ['OPTIONS']);
+    }
+
+    /**
+     * @param string                $uri
+     * @param string|\Closure|array $action
+     * @param array                 $methods
      *
      * @return \Max\Routing\Route
      */
-    public function request(string $uri, $destination, array $methods = ['GET', 'HEAD', 'POST'])
+    public function request(string $uri, $action, array $methods = ['GET', 'HEAD', 'POST'])
     {
         $route = new Route([
-            'uri'         => '/' . trim($this->prefix . $uri, '/'),
-            'destination' => $this->createDestination($destination),
-            'methods'     => $methods,
-            'middleware'  => $this->middlewares,
+            'uri'        => '/' . trim($this->prefix . $uri, '/'),
+            'action'     => $this->createAction($action),
+            'methods'    => $methods,
+            'middleware' => $this->middlewares,
         ]);
         RouteCollector::add($route);
 
@@ -128,22 +139,22 @@ class Router
     /**
      * 这个并没有重用，但是还是分离出来了
      *
-     * @param $destination
+     * @param $action
      *
      * @return mixed|string
      */
-    protected function createDestination($destination)
+    protected function createAction($action)
     {
-        if (is_string($destination)) {
+        if (is_string($action)) {
             if (!is_null($this->controller)) {
-                $destination = sprintf('%s@%s', $this->controller, $destination);
+                $action = sprintf('%s@%s', $this->controller, $action);
             }
             if ('' !== $this->namespace) {
-                $destination = ltrim(sprintf('%s\\%s', $this->namespace, $destination), '\\');
+                $action = ltrim(sprintf('%s\\%s', $this->namespace, $action), '\\');
             }
         }
 
-        return $destination;
+        return $action;
     }
 
     /**

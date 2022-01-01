@@ -19,8 +19,8 @@ class RouterTest extends TestCase
             'namespace'   => $namespace,
         ]);
         $route      = $router->get('/', 'index');
-        self::assertEquals($route->middleware, $middleware);
-        self::assertEquals($route->destination, $namespace . '\\' . $controller . '@index');
+        self::assertEquals($route->getMiddlewares(), $middleware);
+        self::assertEquals($route->getAction(), $namespace . '\\' . $controller . '@index');
     }
 
     public function testMiddleware()
@@ -30,7 +30,7 @@ class RouterTest extends TestCase
                          ->request('/test', 'IndexController@index')
                          ->middleware([4, 5, 6]);
 
-        self::assertEquals($route->middleware, [1, 2, 3, 4, 5, 6]);
+        self::assertEquals($route->getMiddlewares(), [1, 2, 3, 4, 5, 6]);
     }
 
     public function testPrefix()
@@ -38,6 +38,6 @@ class RouterTest extends TestCase
         $router = new Router();
         $route  = $router->prefix('/api')
                          ->request('/users', 'TestController@test');
-        self::assertEquals($route->uri, '/api/users');
+        self::assertEquals($route->getUri(), '/api/users');
     }
 }

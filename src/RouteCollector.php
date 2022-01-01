@@ -9,8 +9,8 @@ use Psr\Http\Message\ServerRequestInterface;
 /**
  * @class   RouteCollector
  * @author  ChengYao
- * @date    2021/12/18
- * @time    9:26
+ * @date    2022/1/1
+ * @time    23:11
  * @package Max\Routing
  */
 class RouteCollector
@@ -110,11 +110,11 @@ class RouteCollector
         $requestMethod = $request->getMethod();
         foreach (static::getByMethod($requestMethod) as $route) {
             /* @var Route $route */
-            $uri = $route->uri;
+            $uri = $route->getUri();
             if ($uri === $requestUri || preg_match('#^' . $uri . '$#iU', $requestUri, $match)) {
                 if (isset($match)) {
                     array_shift($match);
-                    $route->routeParams = $match;
+                    $route->setRouteParams($match);
                 }
 
                 return $route;
@@ -137,8 +137,8 @@ class RouteCollector
                 $export[$method][] = [
                     'uri'              => $route->getUri(),
                     'methods'          => $route->getMethods(),
-                    'destination'      => $route->getDestination(),
-                    'middleware'       => $route->getMiddleware(),
+                    'action'           => $route->getAction(),
+                    'middleware'       => $route->getMiddlewares(),
                     'ext'              => $route->getExt(),
                     'cache'            => $route->getCache(),
                     'alias'            => $route->getAlias(),
