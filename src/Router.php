@@ -126,10 +126,10 @@ class Router
     public function request(string $uri, $action, array $methods = ['GET', 'HEAD', 'POST'])
     {
         $route = new Route([
-            'uri'        => '/' . trim($this->prefix . $uri, '/'),
-            'action'     => $this->createAction($action),
-            'methods'    => $methods,
-            'middleware' => $this->middlewares,
+            'uri'         => '/' . trim($this->prefix . $uri, '/'),
+            'action'      => $this->createAction($action),
+            'methods'     => $methods,
+            'middlewares' => $this->middlewares,
         ]);
         RouteCollector::add($route);
 
@@ -170,7 +170,7 @@ class Router
             $new = clone $this;
             foreach ($options as $key => $value) {
                 $method = 'prepare' . ucfirst($key);
-                if (method_exists($new, $method)) {
+                if (\method_exists($new, $method)) {
                     $new->{$key} = $new->{$method}($value);
                 }
             }
