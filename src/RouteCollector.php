@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Max\Routing;
@@ -96,6 +97,27 @@ class RouteCollector
         static::$routes = [];
     }
 
+    protected static function compileUri(Route $route)
+    {
+        if(isset($route->compiledUri)) {
+            return $route->compiledUri;
+        }
+        $uri = $route->getUri();
+        preg_match_all('/\{([^\/]+)\}/', $uri, $matched, PREG_PATTERN_ORDER);
+        $rules = [];
+        foreach ($matched[1] as $value) {
+            $where = $route->getWhere($value);
+            $nullable = '?' === $value[strlen($value) - 1];
+            $value = $nullable ? trim($value, '?') : $value;
+            $route->setParameter($value, null);
+
+            $rules[$value] = sprintf('(?P<%s>%s)%s', $value, $where, $nullable ? '?' : '');
+        }
+
+        return $route->compiledUri = str_replace($matched[0], $rules, $uri);
+    }
+
+
     /**
      * 匹配
      *
@@ -110,13 +132,15 @@ class RouteCollector
         $requestMethod = $request->getMethod();
         foreach (static::getByMethod($requestMethod) as $route) {
             /* @var Route $route */
-            $uri = $route->getUri();
+            $uri = static::compileUri($route);
             if ($uri === $requestUri || preg_match('#^' . $uri . '$#iU', $requestUri, $match)) {
                 if (isset($match)) {
-                    array_shift($match);
-                    $route->setRouteParams($match);
+                    foreach ($route->getParameters() as $key => $value) {
+                        if (array_key_exists($key, $match)) {
+                            $route->setParameter($key, $match[$key]);
+                        }
+                    }
                 }
-
                 return $route;
             }
         }

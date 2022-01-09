@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Max\Routing;
@@ -18,6 +19,8 @@ class Route
      * @var string
      */
     protected string $uri;
+
+    public ?string $compiledUri = null;
 
     /**
      * 请求方法
@@ -68,12 +71,17 @@ class Route
      */
     protected array $allowCrossDomain = [];
 
-    /**
-     * 路由参数
-     *
-     * @var array
-     */
-    protected array $routeParams = [];
+    // /**
+    //  * 路由参数
+    //  *
+    //  * @var array
+    //  */
+    // protected array $routeParams = [];
+
+    public $where = [];
+
+    protected $parameters = [];
+
 
     /**
      * 初始化数据
@@ -88,6 +96,38 @@ class Route
                 $this->{$key} = $value;
             }
         }
+    }
+
+    public function where($key, string $rule)
+    {
+        $this->where[$key] = $rule;
+
+        return $this;
+    }
+
+    public function getWhere(string $key)
+    {
+        return $this->where[$key] ?? '[^\/]+';
+    }
+
+    public function setParameter(string $name, $value)
+    {
+        $this->parameters[$name] = $value;
+    }
+
+    public function setParameters(array $parameters)
+    {
+        $this->parameters = $parameters;
+    }
+
+    public function getParameter(string $name): ?string
+    {
+        return $this->parameters[$name] ?? null;
+    }
+
+    public function getParameters(): array
+    {
+        return $this->parameters;
     }
 
     /**
@@ -246,13 +286,13 @@ class Route
         return $this->allowCrossDomain;
     }
 
-    /**
-     * @return array
-     */
-    public function getRouteParams(): array
-    {
-        return $this->routeParams;
-    }
+    // /**
+    //  * @return array
+    //  */
+    // public function getRouteParams(): array
+    // {
+    //     return $this->routeParams;
+    // }
 
     /**
      * @param string $uri
@@ -318,13 +358,13 @@ class Route
         $this->allowCrossDomain = $allowCrossDomain;
     }
 
-    /**
-     * @param array $routeParams
-     */
-    public function setRouteParams(array $routeParams): void
-    {
-        $this->routeParams = $routeParams;
-    }
+    // /**
+    //  * @param array $routeParams
+    //  */
+    // public function setRouteParams(array $routeParams): void
+    // {
+    //     $this->routeParams = $routeParams;
+    // }
 
     /**
      * @param $key
