@@ -97,30 +97,6 @@ class RouteCollector
         static::$routes = [];
     }
 
-    protected static function compileUri(Route $route)
-    {
-        if (isset($route->compiledUri)) {
-            return $route->compiledUri;
-        }
-        $uri = $route->getUri();
-        preg_match_all('/\{([^\/]+)\}/', $uri, $matched, PREG_PATTERN_ORDER);
-        if (!isset($matched)) {
-            return $uri;
-        }
-        $rules = [];
-        foreach ($matched[1] as $value) {
-            $where = $route->getWhere($value);
-            $nullable = '?' === $value[strlen($value) - 1];
-            $value = $nullable ? trim($value, '?') : $value;
-            $route->setParameter($value, null);
-
-            $rules[$value] = sprintf('(?P<%s>%s)%s', $value, $where, $nullable ? '?' : '');
-        }
-
-        return $route->compiledUri = str_replace($matched[0], $rules, $uri);
-    }
-
-
     /**
      * 匹配
      *
@@ -133,11 +109,15 @@ class RouteCollector
     {
         $requestUri    = $request->getUri()->getPath();
         $requestMethod = $request->getMethod();
+        $ext           = '';
+        if (false !== strrpos($requestUri, '.')) {
+            $value = explode('.', $requestUri);
+            $ext   = $value[count($value) - 1];
+        }
+        /* @var Route $route */
         foreach (static::getByMethod($requestMethod) as $route) {
-            /* @var Route $route */
-            $uri = static::compileUri($route);
-            if ($uri === $requestUri || preg_match('#^' . $uri . '$#iU', $requestUri, $match)) {
-                if (isset($match)) {
+            if ($ext === $route->getExt() && ($route->getUri() === $requestUri || preg_match('#^' . $route->getCompiledUri() . '$#iU', $requestUri, $match))) {
+                if (!empty($match)) {
                     foreach ($route->getParameters() as $key => $value) {
                         if (array_key_exists($key, $match)) {
                             $route->setParameter($key, $match[$key]);

@@ -20,6 +20,11 @@ class Route
      */
     protected string $uri;
 
+    /**
+     * 编译后的Uri
+     *
+     * @var string|null
+     */
     public ?string $compiledUri = null;
 
     /**
@@ -71,33 +76,47 @@ class Route
      */
     protected array $allowCrossDomain = [];
 
-    // /**
-    //  * 路由参数
-    //  *
-    //  * @var array
-    //  */
-    // protected array $routeParams = [];
+    /**
+     * 路由参数规则
+     *
+     * @var array
+     */
+    protected array $where = [];
 
-    public $where = [];
-
-    protected $parameters = [];
-
+    /**
+     * 路由参数
+     *
+     * @var array
+     */
+    protected array $parameters = [];
 
     /**
      * 初始化数据
      * Route constructor.
      *
-     * @param array $route
+     * @param array $options
      */
-    public function __construct(array $route = [])
+    public function __construct(array $options = [])
     {
-        foreach ($route as $key => $value) {
+        foreach ($options as $key => $value) {
             if (\property_exists($this, $key)) {
-                $this->{$key} = $value;
+                if ('ext' === $key) {
+                    $this->ext($value);
+                } else {
+                    $this->{$key} = $value;
+                }
             }
         }
     }
 
+    /**
+     * 设置路由参数规则
+     *
+     * @param        $key
+     * @param string $rule
+     *
+     * @return $this
+     */
     public function where($key, string $rule)
     {
         $this->where[$key] = $rule;
@@ -105,26 +124,60 @@ class Route
         return $this;
     }
 
+    /**
+     * 获取路由参数规则
+     *
+     * @param string $key
+     *
+     * @return mixed|string
+     */
     public function getWhere(string $key)
     {
         return $this->where[$key] ?? '[^\/]+';
     }
 
+    /**
+     * 设置单个路由参数
+     *
+     * @param string $name
+     * @param        $value
+     *
+     * @return void
+     */
     public function setParameter(string $name, $value)
     {
         $this->parameters[$name] = $value;
     }
 
+    /**
+     * 设置路由参数，全部
+     *
+     * @param array $parameters
+     *
+     * @return void
+     */
     public function setParameters(array $parameters)
     {
         $this->parameters = $parameters;
     }
 
+    /**
+     * 获取单个路由参数
+     *
+     * @param string $name
+     *
+     * @return string|null
+     */
     public function getParameter(string $name): ?string
     {
         return $this->parameters[$name] ?? null;
     }
 
+    /**
+     * 获取全部路由参数
+     *
+     * @return array
+     */
     public function getParameters(): array
     {
         return $this->parameters;
@@ -154,8 +207,10 @@ class Route
      */
     public function ext(string $ext)
     {
-        $this->uri .= $ext;
-        return $this->call(__FUNCTION__, $ext);
+        $this->uri .= '.' . $ext;
+        $this->ext = $ext;
+
+        return $this;
     }
 
     /**
@@ -167,7 +222,9 @@ class Route
      */
     public function middleware($middleware)
     {
-        return $this->call(__FUNCTION__, \array_unique([...$this->middlewares, ...(array)$middleware]), true);
+        $this->middlewares = \array_unique([...$this->middlewares, ...(array)$middleware]);
+
+        return $this;
     }
 
     /**
@@ -179,7 +236,9 @@ class Route
      */
     public function cache(int $expire)
     {
-        return $this->call(__FUNCTION__, $expire);
+        $this->cache = $expire;
+
+        return $this;
     }
 
     /**
@@ -191,9 +250,11 @@ class Route
      */
     public function allowCrossDomain($allowDomain)
     {
-        $this->methods[] = 'OPTIONS';
+        $this->methods[]        = 'OPTIONS';
+        $this->allowCrossDomain = (array)$allowDomain;
         RouteCollector::addWithMethod('OPTIONS', $this);
-        return $this->call(__FUNCTION__, $allowDomain, true);
+
+        return $this;
     }
 
     /**
@@ -206,19 +267,8 @@ class Route
     public function alias(string $alias)
     {
         Url::set($alias, $this->uri);
-        return $this->call(__FUNCTION__, $alias);
-    }
+        $this->alias = $alias;
 
-    /**
-     * @param string $key
-     * @param        $value
-     * @param bool   $arrayFlag
-     *
-     * @return $this
-     */
-    protected function call(string $key, $value, bool $arrayFlag = false)
-    {
-        $this->{$key} = $arrayFlag ? (array)$value : $value;
         return $this;
     }
 
@@ -228,6 +278,33 @@ class Route
     public function getUri(): string
     {
         return $this->uri;
+    }
+
+    /**
+     * 获取编译后的Uri
+     *
+     * @return array|string|string[]|null
+     */
+    public function getCompiledUri()
+    {
+        if (isset($this->compiledUri)) {
+            return $this->compiledUri;
+        }
+
+        $uri = $this->getUri();
+        \preg_match_all('/\{([^\/]+)\}/', $uri, $matched, PREG_PATTERN_ORDER);
+        if (empty($matched)) {
+            return $uri;
+        }
+
+        return $this->compiledUri = str_replace($matched[0], \array_map(function($value) {
+            $where    = $this->getWhere($value);
+            $nullable = '?' === $value[strlen($value) - 1];
+            $value    = $nullable ? rtrim($value, '?') : $value;
+            $this->setParameter($value, null);
+
+            return sprintf('(?P<%s>%s)%s', $value, $where, $nullable ? '?' : '');
+        }, $matched[1]), $uri);
     }
 
     /**
@@ -285,14 +362,6 @@ class Route
     {
         return $this->allowCrossDomain;
     }
-
-    // /**
-    //  * @return array
-    //  */
-    // public function getRouteParams(): array
-    // {
-    //     return $this->routeParams;
-    // }
 
     /**
      * @param string $uri
@@ -356,36 +425,5 @@ class Route
     public function setAllowCrossDomain(array $allowCrossDomain): void
     {
         $this->allowCrossDomain = $allowCrossDomain;
-    }
-
-    // /**
-    //  * @param array $routeParams
-    //  */
-    // public function setRouteParams(array $routeParams): void
-    // {
-    //     $this->routeParams = $routeParams;
-    // }
-
-    /**
-     * @param $key
-     *
-     * @return null
-     * @deprecated
-     */
-    public function __get($key)
-    {
-        return $this->{$key} ?? null;
-    }
-
-    /**
-     * @param $key
-     * @param $value
-     *
-     * @return void
-     * @deprecated
-     */
-    public function __set($key, $value)
-    {
-        $this->{$key} = $value;
     }
 }

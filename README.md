@@ -4,15 +4,15 @@
 
 $router = new Router();
 
-$router->get('index', function() {
-    return 'test';
+$router->get('index/{name?}', function($name = null) {
+    return $name;
 });
 
 // 路由分组示例
 $router->prefix('api')->middleware('api')->group(function(Router $router) {
-    $router->get('/user', function() {
+    $router->get('/user/{id}', function($id) {
         var_dump('user');
-    })->middleware('auth');
+    })->middleware('auth')->where('id', '\d+');
     $router->middleware('user')->group(function() {
         //
     }
@@ -25,9 +25,11 @@ var_dump($route);
 ```
 
 此外还有一系列方法，例如
+
 ```php
 Route::namespace('App\Http\Controllers')->controller('IndexController')->get('/', 'index');
 ```
+
 对于分组，`group` 方法还可以传入第二个参数`options`, 参数需要关联数组，数组的键可以是以下之一或多个
 
 - prefix

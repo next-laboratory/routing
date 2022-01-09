@@ -37,6 +37,16 @@ class Router
     protected string $namespace = '';
 
     /**
+     * @var array
+     */
+    protected array $where = [];
+
+    /**
+     * @var string
+     */
+    protected string $ext = '';
+
+    /**
      * @param string $prefix
      * @param array  $middlewares
      */
@@ -125,26 +135,6 @@ class Router
      */
     public function request(string $uri, $action, array $methods = ['GET', 'HEAD', 'POST'])
     {
-        $route = new Route([
-            'uri'         => '/' . trim($this->prefix . $uri, '/'),
-            'action'      => $this->createAction($action),
-            'methods'     => $methods,
-            'middlewares' => $this->middlewares,
-        ]);
-        RouteCollector::add($route);
-
-        return $route;
-    }
-
-    /**
-     * 这个并没有重用，但是还是分离出来了
-     *
-     * @param $action
-     *
-     * @return mixed|string
-     */
-    protected function createAction($action)
-    {
         if (is_string($action)) {
             if (!is_null($this->controller)) {
                 $action = sprintf('%s@%s', $this->controller, $action);
@@ -154,7 +144,18 @@ class Router
             }
         }
 
-        return $action;
+        $route = new Route([
+            'uri'         => '/' . trim($this->prefix . $uri, '/'),
+            'action'      => $action,
+            'methods'     => $methods,
+            'middlewares' => $this->middlewares,
+            'ext'         => $this->ext,
+            'where'       => $this->where,
+        ]);
+
+        RouteCollector::add($route);
+
+        return $route;
     }
 
     /**
@@ -166,15 +167,17 @@ class Router
     {
         $router = RouteCollector::$router;
         $new    = $this;
+
         if (!empty($options)) {
             $new = clone $this;
             foreach ($options as $key => $value) {
-                $method = 'prepare' . ucfirst($key);
+                $method = 'prepare' . \ucfirst($key);
                 if (\method_exists($new, $method)) {
                     $new->{$key} = $new->{$method}($value);
                 }
             }
         }
+
         RouteCollector::$router = $new;
         $group($new);
         RouteCollector::$router = $router;
@@ -206,6 +209,34 @@ class Router
     }
 
     /**
+     * @param array|string $pattern
+     * @param string|null  $value
+     *
+     * @return Router
+     */
+    public function where($pattern, ?string $value = null)
+    {
+        $new        = clone $this;
+        $new->where = $new->prepareWhere($pattern, $value);
+
+        return $new;
+    }
+
+    /**
+     * @param array $pattern
+     * @param       $value
+     *
+     * @return array
+     */
+    protected function prepareWhere($pattern, $value)
+    {
+        if (!is_null($value)) {
+            $pattern = [$pattern => $value];
+        }
+        return array_merge($this->where, $pattern);
+    }
+
+    /**
      * 设置前缀
      *
      * @param string $prefix
@@ -228,6 +259,19 @@ class Router
     protected function preparePrefix(string $prefix)
     {
         return $this->prefix . $prefix;
+    }
+
+    /**
+     * @param string $ext
+     *
+     * @return Router
+     */
+    public function ext(string $ext)
+    {
+        $new      = clone $this;
+        $new->ext = $ext;
+
+        return $new;
     }
 
     /**
