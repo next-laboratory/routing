@@ -170,7 +170,7 @@ class RouteCollector
                     'cache'            => $route->getCache(),
                     'alias'            => $route->getAlias(),
                     'allowCrossDomain' => $route->getAllowCrossDomain(),
-                    'routeParams'      => $route->getRouteParams()
+                    'routeParams'      => $route->getParameters()
                 ];
             }
         }
