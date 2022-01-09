@@ -1,15 +1,16 @@
 {
     "name": "max/routing",
     "description": "A lightweight and fast routing component.",
+    "homepage": "https://github.com/topyao/max-routing",
     "authors": [
         {
-            "name": "ChengYao",
-            "email": "987861463@qq.com"
+            "name": "chengyao",
+            "email": "987861463@qq.com",
+            "homepage": "https://www.1kmb.com"
         }
     ],
     "type": "library",
     "license": "Apache-2.0",
-    "homepage": "https://www.chengyao.xyz",
     "require": {
         "php": "^7.4|^8.0"
     },
