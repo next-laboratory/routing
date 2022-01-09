@@ -99,11 +99,14 @@ class RouteCollector
 
     protected static function compileUri(Route $route)
     {
-        if(isset($route->compiledUri)) {
+        if (isset($route->compiledUri)) {
             return $route->compiledUri;
         }
         $uri = $route->getUri();
         preg_match_all('/\{([^\/]+)\}/', $uri, $matched, PREG_PATTERN_ORDER);
+        if (!isset($matched)) {
+            return $uri;
+        }
         $rules = [];
         foreach ($matched[1] as $value) {
             $where = $route->getWhere($value);
