@@ -144,14 +144,23 @@ class Router
             }
         }
 
-        $route = new Route([
-            'uri'         => '/' . trim($this->prefix . $uri, '/'),
-            'action'      => $action,
-            'methods'     => $methods,
-            'middlewares' => $this->middlewares,
-            'ext'         => $this->ext,
-            'where'       => $this->where,
-        ]);
+        $options = [
+            'uri'     => '/' . trim($this->prefix . $uri, '/'),
+            'action'  => $action,
+            'methods' => $methods,
+        ];
+
+        if (!empty($this->middlewares)) {
+            $options['middlewares'] = $this->middlewares;
+        }
+        if (!empty($this->ext)) {
+            $options['ext'] = $this->ext;
+        }
+        if (!empty($this->where)) {
+            $options['where'] = $this->where;
+        }
+
+        $route = new Route($options);
 
         RouteCollector::add($route);
 
@@ -223,8 +232,8 @@ class Router
     }
 
     /**
-     * @param array $pattern
-     * @param       $value
+     * @param array|string $pattern
+     * @param              $value
      *
      * @return array
      */
