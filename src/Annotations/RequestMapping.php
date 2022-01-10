@@ -33,6 +33,16 @@ class RequestMapping extends Annotation implements MappingInterface
     protected $allowCrossDomain = null;
 
     /**
+     * @var string
+     */
+    protected string $ext = '';
+
+    /**
+     * @var array
+     */
+    protected array $where = [];
+
+    /**
      * @var array|string[]
      */
     protected array $methods = ['GET', 'HEAD', 'POST'];
@@ -51,6 +61,12 @@ class RequestMapping extends Annotation implements MappingInterface
         }
         if ($this->alias) {
             $route->alias($this->alias);
+        }
+        if ($this->ext) {
+            $route->ext($this->ext);
+        }
+        if ($this->where) {
+            $route->where($this->where);
         }
     }
 }
