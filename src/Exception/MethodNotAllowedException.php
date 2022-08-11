@@ -9,12 +9,10 @@ declare(strict_types=1);
  * @license  https://github.com/marxphp/max/blob/master/LICENSE
  */
 
-namespace Max\Routing\Annotations;
+namespace Max\Routing\Exception;
 
-use Attribute;
+use Max\Http\Message\Exception\HttpException;
 
-#[Attribute(Attribute::TARGET_METHOD)]
-class PutMapping extends RequestMapping
+class MethodNotAllowedException extends HttpException
 {
-    public array $methods = ['PUT'];
 }

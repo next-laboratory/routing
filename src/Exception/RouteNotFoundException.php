@@ -9,10 +9,10 @@ declare(strict_types=1);
  * @license  https://github.com/marxphp/max/blob/master/LICENSE
  */
 
-namespace Max\Routing\Exceptions;
+namespace Max\Routing\Exception;
 
-use Max\Http\Message\Exceptions\HttpException;
+use Max\Http\Message\Exception\HttpException;
 
-class MethodNotAllowedException extends HttpException
+class RouteNotFoundException extends HttpException
 {
 }
